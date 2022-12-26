@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import {
   faCircleNotch,
   faPlus,
@@ -23,11 +23,21 @@ export class ListComponent implements OnInit {
   isRemoving = false;
   errorMsg = '';
 
-  constructor(public articleService: ArticleService) {}
+  constructor(
+    public articleService: ArticleService,
+    private app: ApplicationRef
+  ) {
+    console.log('constructor');
+    requestAnimationFrame(() => app.tick());
+  }
 
   ngOnInit(): void {
+    console.log('ngOnInit');
     if (this.articleService.articles === undefined) {
-      this.articleService.load();
+      (async () => {
+        await this.articleService.load();
+        this.app.tick();
+      })();
     }
   }
 
@@ -35,11 +45,13 @@ export class ListComponent implements OnInit {
     try {
       this.errorMsg = '';
       this.isRefreshing = true;
+      this.app.tick();
       await this.articleService.load();
     } catch (err) {
       console.log('err: ', err);
     } finally {
       this.isRefreshing = false;
+      this.app.tick();
     }
   }
 
@@ -47,6 +59,7 @@ export class ListComponent implements OnInit {
     try {
       this.errorMsg = '';
       this.isRemoving = true;
+      this.app.tick();
       const ids = [...this.selectedArticles].map((a) => a.id);
       await this.articleService.remove(ids);
       await this.articleService.load();
@@ -56,14 +69,17 @@ export class ListComponent implements OnInit {
       this.errorMsg = 'Cannot suppress';
     } finally {
       this.isRemoving = false;
+      this.app.tick();
     }
   }
 
   select(a: Article) {
     if (this.selectedArticles.has(a)) {
       this.selectedArticles.delete(a);
+      this.app.tick();
       return;
     }
     this.selectedArticles.add(a);
+    this.app.tick();
   }
 }

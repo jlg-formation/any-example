@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -25,14 +25,19 @@ export class CreateComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private app: ApplicationRef
+  ) {
+    console.log('constructor');
+    requestAnimationFrame(() => app.tick());
+  }
 
   ngOnInit(): void {}
 
   async submit() {
     try {
       this.isAdding = true;
+      requestAnimationFrame(() => this.app.tick());
       await lastValueFrom(timer(1000));
       await this.articleService.add(this.f.value as NewArticle);
       await this.articleService.load();
@@ -44,6 +49,7 @@ export class CreateComponent implements OnInit {
       }
     } finally {
       this.isAdding = false;
+      requestAnimationFrame(() => this.app.tick());
     }
   }
 }

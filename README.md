@@ -14,6 +14,8 @@
 
 ### Add the lazy loading for the stock list and stock create
 
+### Remove zonejs
+
 ### Add a linter
 
 ### Make unit testing do not fail.
