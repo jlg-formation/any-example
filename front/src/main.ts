@@ -1,10 +1,9 @@
-declare const ngDevMode: boolean;
-
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { isDevMode } from '@angular/core';
 
 import { AppModule } from './app/app.module';
 
-if (ngDevMode === false) {
+if (!isDevMode()) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   console.log = () => {};
 }
