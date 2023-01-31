@@ -75,6 +75,7 @@ export class CreateComponent {
   async submit() {
     try {
       this.isAdding = true;
+      this.errorMsg = '';
       await lastValueFrom(timer(1000));
       await this.articleService.add(this.f.value as NewArticle);
       await lastValueFrom(timer(1000));
