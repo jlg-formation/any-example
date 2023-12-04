@@ -13,7 +13,9 @@ export class ArticleService {
   articles: Article[] | undefined;
   errorMsg = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('instantiate articleservice');
+  }
 
   async add(newArticle: NewArticle) {
     await lastValueFrom(
@@ -38,6 +40,7 @@ export class ArticleService {
     } catch (err) {
       console.log('err: ', err);
       this.errorMsg = 'Technical Error';
+      this.articles = undefined;
     }
   }
 
