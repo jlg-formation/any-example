@@ -1,4 +1,9 @@
-import { HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -10,6 +15,7 @@ import { LegalComponent } from './routes/legal/legal.component';
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { logInterceptor } from './interceptors/log.interceptor';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -20,6 +26,7 @@ registerLocaleData(localeFr, 'fr');
   providers: [
     { provide: LOCALE_ID, useValue: 'fr' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EUR' },
+    provideHttpClient(withInterceptors([logInterceptor])),
   ],
   bootstrap: [AppComponent],
 })

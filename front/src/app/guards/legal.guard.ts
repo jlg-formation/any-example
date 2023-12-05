@@ -16,7 +16,7 @@ export const legalGuard: CanActivateFn = (
   const router = inject(Router);
   console.log('coucou legal check guards');
   return of(undefined).pipe(
-    delay(2000),
+    delay(100),
     map(() => {
       if (haveYouReadLegalPage === false) {
         router.navigateByUrl('/legal');
