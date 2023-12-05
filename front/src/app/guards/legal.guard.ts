@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { lastValueFrom, timer } from 'rxjs';
+import { Observable, delay, lastValueFrom, map, of, timer } from 'rxjs';
 
 let haveYouReadLegalPage = false;
 
@@ -9,16 +9,20 @@ export const IHaveReadTheLegalPage = () => {
   haveYouReadLegalPage = true;
 };
 
-export const legalGuard: CanActivateFn = async (
+export const legalGuard: CanActivateFn = (
   route,
   state
-): Promise<boolean> => {
+): Observable<boolean> => {
   const router = inject(Router);
   console.log('coucou legal check guards');
-  await lastValueFrom(timer(2000));
-  if (haveYouReadLegalPage === false) {
-    router.navigateByUrl('/legal');
-    return false;
-  }
-  return true;
+  return of(undefined).pipe(
+    delay(2000),
+    map(() => {
+      if (haveYouReadLegalPage === false) {
+        router.navigateByUrl('/legal');
+        return false;
+      }
+      return true;
+    })
+  );
 };
