@@ -18,10 +18,10 @@ export const legalGuard: CanActivateFn = (
   return of(undefined).pipe(
     delay(100),
     map(() => {
-      if (haveYouReadLegalPage === false) {
-        router.navigateByUrl('/legal');
-        return false;
-      }
+      // if (haveYouReadLegalPage === false) {
+      //   router.navigateByUrl('/legal');
+      //   return false;
+      // }
       return true;
     })
   );
