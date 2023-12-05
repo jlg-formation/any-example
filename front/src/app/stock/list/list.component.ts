@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   faCircleNotch,
   faPlus,
@@ -22,18 +22,22 @@ import {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
+  errorMsg = '';
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;
-  faTrashAlt = faTrashAlt;
   faTimes = faTimes;
-  selectedArticles = new Set<Article>();
+  faTrashAlt = faTrashAlt;
   isRemoving = false;
-  errorMsg = '';
   refreshSubscription: Subscription | undefined;
+  selectedArticles = new Set<Article>();
 
   constructor(public articleService: ArticleService) {}
+
+  ngOnDestroy(): void {
+    this.refreshSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     if (this.articleService.articles === undefined) {
@@ -54,7 +58,7 @@ export class ListComponent implements OnInit {
           return this.articleService.loadObs();
         }),
         catchError((err) => {
-          console.log('err: ', err);
+          console.error('err: ', err);
           return of(undefined);
         }),
         finalize(() => {
