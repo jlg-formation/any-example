@@ -4,10 +4,18 @@ import {
   faPlus,
   faRotateRight,
   faTrashAlt,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-
+import {
+  Observable,
+  Subscription,
+  catchError,
+  finalize,
+  of,
+  switchMap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -19,29 +27,41 @@ export class ListComponent implements OnInit {
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashAlt = faTrashAlt;
-  isRefreshing = false;
+  faTimes = faTimes;
   selectedArticles = new Set<Article>();
   isRemoving = false;
   errorMsg = '';
+  refreshSubscription: Subscription | undefined;
 
   constructor(public articleService: ArticleService) {}
 
   ngOnInit(): void {
     if (this.articleService.articles === undefined) {
-      this.articleService.load();
+      this.articleService.loadObs().subscribe();
     }
   }
 
-  async refresh() {
-    try {
-      this.errorMsg = '';
-      this.isRefreshing = true;
-      await this.articleService.load();
-    } catch (err) {
-      console.log('err: ', err);
-    } finally {
-      this.isRefreshing = false;
+  refresh(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+      this.refreshSubscription = undefined;
+      return;
     }
+    this.refreshSubscription = of(undefined)
+      .pipe(
+        switchMap(() => {
+          this.errorMsg = '';
+          return this.articleService.loadObs();
+        }),
+        catchError((err) => {
+          console.log('err: ', err);
+          return of(undefined);
+        }),
+        finalize(() => {
+          this.refreshSubscription = undefined;
+        })
+      )
+      .subscribe();
   }
 
   async remove() {

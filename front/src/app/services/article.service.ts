@@ -1,6 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, lastValueFrom, switchMap, timer } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  delay,
+  lastValueFrom,
+  map,
+  of,
+  switchMap,
+  tap,
+  timer,
+} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Article, NewArticle } from '../interfaces/article';
 
@@ -44,7 +54,26 @@ export class ArticleService {
     }
   }
 
-  loadObs() {}
+  loadObs(): Observable<void> {
+    return of(undefined).pipe(
+      tap(() => {
+        this.errorMsg = '';
+      }),
+      switchMap(() => {
+        return this.http.get<Article[]>(url);
+      }),
+      delay(4000),
+      map((articles) => {
+        this.articles = articles;
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Technical Error';
+        this.articles = undefined;
+        return of(undefined);
+      })
+    );
+  }
 
   async remove(ids: string[]) {
     await lastValueFrom(

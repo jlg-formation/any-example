@@ -5,8 +5,10 @@
       <span *ngIf="errorMsg">Erreur: {{ errorMsg }}</span>
     </div>
     <nav>
-      <button title="Rafraîchir" (click)="refresh()" [disabled]="isRefreshing">
-        <fa-icon [icon]="faRotateRight" [spin]="isRefreshing"></fa-icon>
+      <button title="Rafraîchir" (click)="refresh()">
+        <fa-icon
+          [icon]="refreshSubscription ? faTimes : faRotateRight"
+        ></fa-icon>
       </button>
       <a routerLink="create" class="button" title="Ajouter">
         <fa-icon [icon]="faPlus"></fa-icon>
