@@ -62,7 +62,7 @@ export class ArticleService {
       switchMap(() => {
         return this.http.get<Article[]>(url);
       }),
-      delay(4000),
+      delay(300),
       map((articles) => {
         this.articles = articles;
       }),
