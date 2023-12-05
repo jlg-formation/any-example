@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { delay, finalize, of, tap } from 'rxjs';
+import { delay, finalize, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-async-btn',
@@ -17,13 +17,19 @@ export class AsyncBtnComponent {
   @Input()
   icon = faCoffee;
 
+  @Input()
+  action: () => Promise<void> = async (): Promise<void> => {};
+
   doSomething() {
     of(undefined)
       .pipe(
         tap(() => {
           this.isDoing = true;
         }),
-        delay(2000),
+        delay(300),
+        switchMap(() => {
+          return this.action();
+        }),
         tap(() => {
           console.log('coucou');
         }),

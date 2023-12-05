@@ -13,18 +13,12 @@
       <a routerLink="create" class="button" title="Ajouter">
         <fa-icon [icon]="faPlus"></fa-icon>
       </a>
-      <button
+      <app-async-btn
         title="Supprimer"
         [hidden]="selectedArticles.size === 0"
-        (click)="remove()"
-        [disabled]="isRemoving"
-      >
-        <fa-icon
-          [icon]="isRemoving ? faCircleNotch : faTrashAlt"
-          [spin]="isRemoving"
-        ></fa-icon>
-      </button>
-      <app-async-btn [icon]="faTrashAlt"></app-async-btn>
+        [icon]="faTrashAlt"
+        [action]="this.remove.bind(this)"
+      ></app-async-btn>
     </nav>
     <table>
       <thead>
