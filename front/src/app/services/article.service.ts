@@ -28,7 +28,7 @@ export class ArticleService {
     );
   }
 
-  async load() {
+  async load(): Promise<void> {
     try {
       this.errorMsg = '';
       await this.http
@@ -43,6 +43,8 @@ export class ArticleService {
       this.articles = undefined;
     }
   }
+
+  loadObs() {}
 
   async remove(ids: string[]) {
     await lastValueFrom(
