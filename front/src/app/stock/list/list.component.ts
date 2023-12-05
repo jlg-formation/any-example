@@ -3,19 +3,12 @@ import {
   faCircleNotch,
   faPlus,
   faRotateRight,
-  faTrashAlt,
   faTimes,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import { Subscription, catchError, finalize, of, switchMap } from 'rxjs';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  finalize,
-  of,
-  switchMap,
-} from 'rxjs';
 
 @Component({
   selector: 'app-list',
