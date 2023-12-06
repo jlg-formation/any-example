@@ -16,13 +16,26 @@ import { LegalComponent } from './routes/legal/legal.component';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { logInterceptor } from './interceptors/log.interceptor';
+import { NotfoundComponent } from './routes/notfound/notfound.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LegalComponent],
-  imports: [BrowserModule, AppRoutingModule, LayoutModule, HttpClientModule],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LegalComponent,
+    NotfoundComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    LayoutModule,
+    HttpClientModule,
+    FontAwesomeModule,
+  ],
   providers: [
     { provide: LOCALE_ID, useValue: 'fr' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EUR' },
