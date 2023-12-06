@@ -1,6 +1,9 @@
-import { Subject } from "rxjs";
+// @ts-nocheck
+import { BehaviorSubject } from "rxjs";
 
-const subject = new Subject();
+const subject = new BehaviorSubject("toto");
+
+console.log("subject.value: ", subject.value);
 
 subject.next(56);
 subject.next("toto");
