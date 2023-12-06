@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'legal', component: LegalComponent },
   { path: 'stock', loadChildren: () => StockModule, canActivate: [legalGuard] },
-  { path: '**', component: NotfoundComponent },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
