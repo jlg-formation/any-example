@@ -33,7 +33,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.articleService.articles === undefined) {
+    if (this.articleService.articles$.value === undefined) {
       this.articleService.loadObs().subscribe();
     }
   }

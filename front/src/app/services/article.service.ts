@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   Observable,
   catchError,
   delay,
@@ -20,7 +21,7 @@ const url = environment.apiDomain + '/api/articles';
   providedIn: 'root',
 })
 export class ArticleService {
-  articles: Article[] | undefined;
+  articles$ = new BehaviorSubject<Article[] | undefined>(undefined);
   errorMsg = '';
 
   constructor(private http: HttpClient) {
@@ -45,12 +46,12 @@ export class ArticleService {
         .get<Article[]>(url)
         .pipe(delay(1000))
         .forEach((articles) => {
-          this.articles = articles;
+          this.articles$.next(articles);
         });
     } catch (err) {
       console.log('err: ', err);
       this.errorMsg = 'Technical Error';
-      this.articles = undefined;
+      this.articles$.next(undefined);
     }
   }
 
@@ -64,12 +65,12 @@ export class ArticleService {
       }),
       delay(300),
       map((articles) => {
-        this.articles = articles;
+        this.articles$.next(articles);
       }),
       catchError((err) => {
         console.log('err: ', err);
         this.errorMsg = 'Technical Error';
-        this.articles = undefined;
+        this.articles$.next(undefined);
         return of(undefined);
       })
     );

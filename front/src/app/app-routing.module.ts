@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { legalGuard } from './guards/legal.guard';
 import { HomeComponent } from './routes/home/home.component';
 import { LegalComponent } from './routes/legal/legal.component';
 import { StockModule } from './stock/stock.module';
-import { legalGuard } from './guards/legal.guard';
-import { NotfoundComponent } from './routes/notfound/notfound.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
