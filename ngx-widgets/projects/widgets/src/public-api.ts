@@ -4,3 +4,4 @@
 
 export * from './lib/widgets.service';
 export * from './lib/widgets.component';
+export * from './lib/autofocus.directive';

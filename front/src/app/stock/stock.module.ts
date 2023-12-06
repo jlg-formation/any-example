@@ -8,6 +8,7 @@ import { ListComponent } from './list/list.component';
 import { StockRoutingModule } from './stock-routing.module';
 import { WidgetModule } from '../widget/widget.module';
 import { AsyncBtnComponent } from '../standalone/async-btn/async-btn.component';
+import { AutofocusDirective } from 'widgets';
 
 @NgModule({
   declarations: [CreateComponent, ListComponent],
@@ -18,6 +19,7 @@ import { AsyncBtnComponent } from '../standalone/async-btn/async-btn.component';
     ReactiveFormsModule,
     WidgetModule,
     AsyncBtnComponent,
+    AutofocusDirective,
   ],
 })
 export class StockModule {}

@@ -2,10 +2,10 @@ import { Directive } from '@angular/core';
 
 @Directive({
   selector: '[wdgAutofocus]',
-  standalone: true
+  standalone: true,
 })
 export class AutofocusDirective {
-
-  constructor() { }
-
+  constructor() {
+    console.log('xxx xxx autofocus wdg xxx yyy');
+  }
 }

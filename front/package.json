@@ -27,6 +27,7 @@
     "rxjs": "~7.8.0",
     "sanitize.css": "^13.0.0",
     "tslib": "^2.3.0",
+    "widgets": "file:../ngx-widgets/dist/widgets",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
