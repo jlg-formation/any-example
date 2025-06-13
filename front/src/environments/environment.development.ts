@@ -1,3 +1,3 @@
 export const environment = {
-  apiDomain: '',
+  apiDomain: 'http://localhost:3000',
 };
