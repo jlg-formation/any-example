@@ -4,14 +4,23 @@
     <label>
       <span>Nom</span>
       <input type="text" formControlName="name" />
+      <span class="error">
+        <span>{{ errorService.getErrorMessage(f, "name") }}</span>
+      </span>
     </label>
     <label>
       <span>Prix</span>
-      <input type="number" formControlName="price" />
+      <input type="number" formControlName="price" min="0" step="0.01" />
+      <span class="error">
+        <span>{{ errorService.getErrorMessage(f, "price") }}</span>
+      </span>
     </label>
     <label>
       <span>Quantité</span>
-      <input type="number" formControlName="qty" />
+      <input type="number" formControlName="qty" min="0" step="1" />
+      <span class="error">
+        <span>{{ errorService.getErrorMessage(f, "qty") }}</span>
+      </span>
     </label>
     <div class="error">
       @if (errorMsg) {

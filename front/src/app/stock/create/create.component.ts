@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -13,9 +12,11 @@ import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, timer } from 'rxjs';
 
 import { NewArticle } from '../../interfaces/article';
+import { FG } from '../../interfaces/form';
 import { ArticleService } from '../../services/article.service';
-import { blackListValidator } from '../../validators/black-list.validator';
 import { BlackListService } from '../../services/black-list.service';
+import { ErrorService } from '../../services/error.service';
+import { blackListValidator } from '../../validators/black-list.validator';
 
 @Component({
   selector: 'app-create',
@@ -36,13 +37,18 @@ export default class CreateComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private blackListService: BlackListService,
+    protected errorService: ErrorService,
   ) {
     this.f = this.fb.group<FG<NewArticle>>({
       name: this.fb.nonNullable.control('Truc', [
         Validators.required,
         blackListValidator(this.blackListService),
+        Validators.maxLength(10),
       ]),
-      price: this.fb.nonNullable.control(0, Validators.required),
+      price: this.fb.nonNullable.control(0, [
+        Validators.required,
+        Validators.min(0),
+      ]),
       qty: this.fb.nonNullable.control(1, Validators.required),
     });
   }
@@ -66,7 +72,3 @@ export default class CreateComponent implements OnInit {
     }
   }
 }
-
-type FG<T extends object> = {
-  [key in keyof T]: AbstractControl<T[key]>;
-};
