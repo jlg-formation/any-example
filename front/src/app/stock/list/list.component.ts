@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./list.component.scss'],
   imports: [RouterLink, FontAwesomeModule],
 })
-export class ListComponent implements OnInit {
+export default class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;

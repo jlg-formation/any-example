@@ -18,7 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   styleUrls: ['./create.component.scss'],
   imports: [ReactiveFormsModule, FontAwesomeModule],
 })
-export class CreateComponent implements OnInit {
+export default class CreateComponent implements OnInit {
   errorMsg = '';
   f = new FormGroup({
     name: new FormControl('Truc', [Validators.required]),
@@ -32,7 +32,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {}
