@@ -2,7 +2,9 @@
   <h1>Liste des articles</h1>
   <div class="content">
     <div class="error">
-      <span *ngIf="errorMsg">Erreur: {{ errorMsg }}</span>
+      @if (errorMsg) {
+        <span>Erreur: {{ errorMsg }}</span>
+      }
     </div>
     <nav>
       <button title="Rafraîchir" (click)="refresh()" [disabled]="isRefreshing">

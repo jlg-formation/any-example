@@ -21,8 +21,8 @@ export class ArticleService {
         catchError((err) => {
           console.log('err: ', err);
           throw new Error('Technical error');
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -38,6 +38,7 @@ export class ArticleService {
     } catch (err) {
       console.log('err: ', err);
       this.errorMsg = 'Technical Error';
+      throw err;
     }
   }
 
@@ -47,13 +48,13 @@ export class ArticleService {
         switchMap(() =>
           this.http.delete<void>(url, {
             body: ids,
-          })
+          }),
         ),
         catchError((err) => {
           console.log('err: ', err);
           throw new Error('Technical error');
-        })
-      )
+        }),
+      ),
     );
   }
 }
