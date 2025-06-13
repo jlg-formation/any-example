@@ -15,6 +15,7 @@ import { lastValueFrom, timer } from 'rxjs';
 import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { blackListValidator } from '../../validators/black-list.validator';
+import { BlackListService } from '../../services/black-list.service';
 
 @Component({
   selector: 'app-create',
@@ -34,11 +35,12 @@ export default class CreateComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private blackListService: BlackListService,
   ) {
     this.f = this.fb.group<FG<NewArticle>>({
       name: this.fb.nonNullable.control('Truc', [
         Validators.required,
-        blackListValidator,
+        blackListValidator(this.blackListService),
       ]),
       price: this.fb.nonNullable.control(0, Validators.required),
       qty: this.fb.nonNullable.control(1, Validators.required),
