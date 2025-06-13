@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, timer } from 'rxjs';
-import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NewArticle } from '../../interfaces/article';
 
+type FG<T extends object> = {
+  [key in keyof T]: AbstractControl<T[key]>;
+};
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -20,20 +25,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 })
 export default class CreateComponent implements OnInit {
   errorMsg = '';
-  f = new FormGroup({
-    name: new FormControl('Truc', {
-      validators: Validators.required,
-      nonNullable: true,
-    }),
-    price: new FormControl(0, {
-      validators: Validators.required,
-      nonNullable: true,
-    }),
-    qty: new FormControl(1, {
-      validators: Validators.required,
-      nonNullable: true,
-    }),
-  });
+  f: FormGroup<FG<NewArticle>>;
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   isAdding = false;
@@ -42,7 +34,14 @@ export default class CreateComponent implements OnInit {
     private articleService: ArticleService,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+    private fb: FormBuilder,
+  ) {
+    this.f = this.fb.group<FG<NewArticle>>({
+      name: this.fb.nonNullable.control('Truc', Validators.required),
+      price: this.fb.nonNullable.control(0, Validators.required),
+      qty: this.fb.nonNullable.control(1, Validators.required),
+    });
+  }
 
   ngOnInit(): void {}
 
