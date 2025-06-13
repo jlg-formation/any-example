@@ -21,9 +21,18 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export default class CreateComponent implements OnInit {
   errorMsg = '';
   f = new FormGroup({
-    name: new FormControl('Truc', [Validators.required]),
-    price: new FormControl(0, [Validators.required]),
-    qty: new FormControl(1, [Validators.required]),
+    name: new FormControl('Truc', {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
+    price: new FormControl(0, {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
+    qty: new FormControl(1, {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
   });
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
@@ -41,7 +50,7 @@ export default class CreateComponent implements OnInit {
     try {
       this.isAdding = true;
       await lastValueFrom(timer(1000));
-      await this.articleService.add(this.f.value as NewArticle);
+      await this.articleService.add(this.f.getRawValue());
       await this.articleService.load();
       await this.router.navigate(['..'], { relativeTo: this.route });
     } catch (err) {
