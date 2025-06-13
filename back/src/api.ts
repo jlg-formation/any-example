@@ -38,4 +38,23 @@ app.delete("/articles", (req, res) => {
   res.status(204).end();
 });
 
+app.get("/isBlackListed", (req, res) => {
+  const query = req.query;
+  if (!("word" in query)) {
+    res.json(false);
+    return;
+  }
+  const word = query.word;
+  if (typeof word !== "string") {
+    res.json(false);
+    return;
+  }
+  const blackList = ["zut", "qqq"];
+  if (!blackList.includes(word)) {
+    res.json(false);
+    return;
+  }
+  res.json(true);
+});
+
 export const api = app;

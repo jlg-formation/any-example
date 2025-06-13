@@ -1,16 +1,29 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
+import { delay, map, Observable, of, switchMap } from 'rxjs';
 import { BlackListService } from '../services/black-list.service';
 
 export const blackListValidator: (
   blackListService: BlackListService,
-) => ValidatorFn =
+) => AsyncValidatorFn =
   (blackListService) =>
-  (control: AbstractControl): ValidationErrors | null => {
-    const blackList = blackListService.blackList;
-    if (blackList.includes(control.value)) {
-      return {
-        blackList: 'Mot interdit',
-      };
-    }
-    return null;
+  (control: AbstractControl): Observable<ValidationErrors | null> => {
+    return of(undefined).pipe(
+      delay(1000),
+      switchMap(() => {
+        return blackListService.isBlackListed(control.value);
+      }),
+      map((isBlackListed: boolean) => {
+        console.log('isBlackListed: ', isBlackListed);
+        if (isBlackListed) {
+          return {
+            blackList: true,
+          };
+        }
+        return null;
+      }),
+    );
   };

@@ -40,11 +40,11 @@ export default class CreateComponent implements OnInit {
     protected errorService: ErrorService,
   ) {
     this.f = this.fb.group<FG<NewArticle>>({
-      name: this.fb.nonNullable.control('Truc', [
-        Validators.required,
-        blackListValidator(this.blackListService),
-        Validators.maxLength(10),
-      ]),
+      name: this.fb.nonNullable.control(
+        'Truc',
+        [Validators.required, Validators.maxLength(10)],
+        [blackListValidator(this.blackListService)],
+      ),
       price: this.fb.nonNullable.control(0, [
         Validators.required,
         Validators.min(0),

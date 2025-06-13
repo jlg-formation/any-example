@@ -15,7 +15,6 @@ export class ErrorService {
     if (field.errors === null) {
       return '';
     }
-    console.log('field.errors: ', field.errors);
     if ('blackList' in field.errors) {
       return 'Mot interdit';
     }
