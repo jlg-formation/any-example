@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircleNotch,
   faPlus,
@@ -7,12 +8,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  standalone: false,
+  imports: [RouterLink, CommonModule, FontAwesomeModule],
 })
 export class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
