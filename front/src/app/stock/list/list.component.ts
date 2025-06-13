@@ -9,13 +9,12 @@ import {
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  imports: [RouterLink, CommonModule, FontAwesomeModule],
+  imports: [RouterLink, FontAwesomeModule],
 })
 export class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
