@@ -1,4 +1,5 @@
 import {
+  Attribute,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -32,7 +33,6 @@ export class AsyncBtnComponent {
   readonly cd = inject(ChangeDetectorRef);
 
   @Input() action: Observable<void> | Promise<void> = Promise.resolve();
-  @Input() class = '';
   @Input() disabled = false;
   faCircleNotch = faCircleNotch;
   @Input()
@@ -41,6 +41,8 @@ export class AsyncBtnComponent {
 
   @Output('setError')
   setErrorEmitter = new EventEmitter<string>();
+
+  constructor(@Attribute('class') public className = '') {}
 
   startAction(): Observable<void> {
     return of(undefined).pipe(
