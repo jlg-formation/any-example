@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 
 import { Subscription, interval, tap } from 'rxjs';
 
@@ -12,6 +12,10 @@ import { Subscription, interval, tap } from 'rxjs';
 export class LegalComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   time = signal(new Date());
+  startTime = new Date();
+  chrono = computed(() =>
+    ((this.time().getTime() - this.startTime.getTime()) / 1000).toFixed(),
+  );
 
   constructor() {
     this.subscription = interval(1000)
