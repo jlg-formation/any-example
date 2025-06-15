@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircleNotch,
@@ -6,10 +7,9 @@ import {
   faRotateRight,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import { catchError, finalize, map, Observable, of, switchMap } from 'rxjs';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import { RouterLink } from '@angular/router';
-import { lastValueFrom, map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -33,7 +33,7 @@ export default class ListComponent implements OnInit {
   ngOnInit(): void {
     of(undefined)
       .pipe(
-        switchMap(() => this.articleService.load2()),
+        switchMap(() => this.articleService.load()),
         map(() => {
           this.cd.markForCheck();
         }),
@@ -41,35 +41,49 @@ export default class ListComponent implements OnInit {
       .subscribe();
   }
 
-  async refresh() {
-    try {
-      this.errorMsg = '';
-      this.isRefreshing = true;
-      await lastValueFrom(this.articleService.load2());
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Erreur Technique';
-    } finally {
-      this.isRefreshing = false;
-      this.cd.markForCheck();
-    }
+  refresh(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRefreshing = true;
+        return this.articleService.load();
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Erreur Technique';
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRefreshing = false;
+        this.cd.markForCheck();
+      }),
+    );
   }
 
-  async remove() {
-    try {
-      this.errorMsg = '';
-      this.isRemoving = true;
-      const ids = [...this.selectedArticles].map((a) => a.id);
-      await lastValueFrom(this.articleService.remove2(ids));
-      await lastValueFrom(this.articleService.load2());
-      this.selectedArticles.clear();
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Cannot suppress';
-    } finally {
-      this.isRemoving = false;
-      this.cd.markForCheck();
-    }
+  remove(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRemoving = true;
+        const ids = [...this.selectedArticles].map((a) => a.id);
+        return this.articleService.remove(ids);
+      }),
+      switchMap(() => {
+        return this.articleService.load();
+      }),
+      map(() => {
+        this.selectedArticles.clear();
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Cannot suppress';
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRefreshing = false;
+        this.cd.markForCheck();
+      }),
+    );
   }
 
   select(a: Article) {

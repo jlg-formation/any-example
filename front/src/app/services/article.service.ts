@@ -24,7 +24,7 @@ export class ArticleService {
   errorMsg = '';
   http = inject(HttpClient);
 
-  add2(newArticle: NewArticle): Observable<void> {
+  add(newArticle: NewArticle): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => this.http.post<void>(url, newArticle)),
       catchError((err) => {
@@ -34,7 +34,7 @@ export class ArticleService {
     );
   }
 
-  load2(): Observable<void> {
+  load(): Observable<void> {
     return of(undefined).pipe(
       tap(() => {
         console.log('start load');
@@ -54,7 +54,7 @@ export class ArticleService {
     );
   }
 
-  remove2(ids: string[]): Observable<void> {
+  remove(ids: string[]): Observable<void> {
     return of(undefined).pipe(
       delay(1000),
       switchMap(() =>
