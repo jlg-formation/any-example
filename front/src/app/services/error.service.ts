@@ -7,6 +7,7 @@ import { FG } from '../interfaces/form';
 })
 export class ErrorService {
   getErrorMessage<T extends object>(f: FormGroup<FG<T>>, fieldName: keyof T) {
+    console.log('getErrorMessage', fieldName);
     if (f.valid || f.controls[fieldName].valid || f.untouched) {
       return '';
     }
