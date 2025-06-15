@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Output,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -32,8 +33,9 @@ export class AsyncBtnComponent {
   icon = input(faCircleNotch);
   isRunning = signal(false);
 
-  @Output('setError')
-  setErrorEmitter = new EventEmitter<string>();
+  setErrorEmitter = output<string>({
+    alias: 'setError',
+  });
 
   constructor(@Attribute('class') public className = '') {}
 
