@@ -9,6 +9,7 @@ import {
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { RouterLink } from '@angular/router';
+import { lastValueFrom, map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -30,19 +31,21 @@ export default class ListComponent implements OnInit {
   cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    (async () => {
-      if (this.articleService.articles === undefined) {
-        await this.articleService.load();
-        this.cd.markForCheck();
-      }
-    })();
+    of(undefined)
+      .pipe(
+        switchMap(() => this.articleService.load2()),
+        map(() => {
+          this.cd.markForCheck();
+        }),
+      )
+      .subscribe();
   }
 
   async refresh() {
     try {
       this.errorMsg = '';
       this.isRefreshing = true;
-      await this.articleService.load();
+      await lastValueFrom(this.articleService.load2());
     } catch (err) {
       console.log('err: ', err);
       this.errorMsg = 'Erreur Technique';
@@ -57,8 +60,8 @@ export default class ListComponent implements OnInit {
       this.errorMsg = '';
       this.isRemoving = true;
       const ids = [...this.selectedArticles].map((a) => a.id);
-      await this.articleService.remove(ids);
-      await this.articleService.load();
+      await lastValueFrom(this.articleService.remove2(ids));
+      await lastValueFrom(this.articleService.load2());
       this.selectedArticles.clear();
     } catch (err) {
       console.log('err: ', err);

@@ -48,8 +48,8 @@ export default class CreateComponent {
     try {
       this.isAdding = true;
       await lastValueFrom(timer(1000));
-      await this.articleService.add(this.f.getRawValue());
-      await this.articleService.load();
+      await lastValueFrom(this.articleService.add2(this.f.getRawValue()));
+      await lastValueFrom(this.articleService.load2());
       await this.router.navigate(['..'], { relativeTo: this.route });
     } catch (err) {
       console.log('err: ', err);
