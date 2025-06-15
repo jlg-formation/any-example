@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (a of articleService.articles; track a.id) {
+        @for (a of articleService.articles(); track a.id) {
           <tr [class.selected]="selectedArticles.has(a)" (click)="select(a)">
             <td class="name">{{ a.name }}</td>
             <td class="price">{{ a.price }} €</td>
@@ -45,11 +45,11 @@
           <tr>
             @if (articleService.articles !== undefined) {
               <td colspan="3">Pas d'article</td>
-            } @else if (articleService.errorMsg === "") {
+            } @else if (articleService.errorMsg() === "") {
               <td colspan="3">Loading...</td>
             } @else {
               <td colspan="3">
-                <strong> Erreur: {{ articleService.errorMsg }} </strong>
+                <strong> Erreur: {{ articleService.errorMsg() }} </strong>
               </td>
             }
           </tr>

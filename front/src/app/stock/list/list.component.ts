@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -8,7 +8,7 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
@@ -20,26 +20,15 @@ import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
   styleUrl: './list.component.scss',
   imports: [RouterLink, FontAwesomeModule, AsyncBtnComponent],
 })
-export default class ListComponent implements OnInit {
-  articleService = inject(ArticleService);
-  cd = inject(ChangeDetectorRef);
-  errorMsg = '';
-  faCircleNotch = faCircleNotch;
-  faPlus = faPlus;
+export default class ListComponent {
+  readonly articleService = inject(ArticleService);
+  readonly faCircleNotch = faCircleNotch;
+  readonly faPlus = faPlus;
+
+  errorMsg = signal('');
   faRotateRight = faRotateRight;
   faTrashAlt = faTrashAlt;
   selectedArticles = new Set<Article>();
-
-  ngOnInit(): void {
-    of(undefined)
-      .pipe(
-        switchMap(() => this.articleService.load()),
-        map(() => {
-          this.cd.markForCheck();
-        }),
-      )
-      .subscribe();
-  }
 
   refresh(): Observable<void> {
     return of(undefined).pipe(
@@ -48,11 +37,8 @@ export default class ListComponent implements OnInit {
       }),
       catchError((err) => {
         console.log('err: ', err);
-        this.errorMsg = 'Erreur Technique';
+        this.errorMsg.set('Erreur Technique');
         return of(undefined);
-      }),
-      finalize(() => {
-        this.cd.markForCheck();
       }),
     );
   }
@@ -60,7 +46,7 @@ export default class ListComponent implements OnInit {
   remove(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
+        this.errorMsg.set('');
         const ids = [...this.selectedArticles].map((a) => a.id);
         return this.articleService.remove(ids);
       }),
@@ -72,11 +58,8 @@ export default class ListComponent implements OnInit {
       }),
       catchError((err) => {
         console.log('err: ', err);
-        this.errorMsg = 'Cannot suppress';
+        this.errorMsg.set('Cannot suppress');
         return of(undefined);
-      }),
-      finalize(() => {
-        this.cd.markForCheck();
       }),
     );
   }
@@ -90,6 +73,6 @@ export default class ListComponent implements OnInit {
   }
 
   setError(message: string) {
-    this.errorMsg = message;
+    this.errorMsg.set(message);
   }
 }

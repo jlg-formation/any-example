@@ -1,18 +1,8 @@
-import { inject, Injectable } from '@angular/core';
-import { Article, NewArticle } from '../interfaces/article';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { catchError, delay, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import {
-  delay,
-  lastValueFrom,
-  catchError,
-  switchMap,
-  timer,
-  Observable,
-  of,
-  tap,
-  map,
-} from 'rxjs';
+import { Article, NewArticle } from '../interfaces/article';
 
 const url = environment.apiDomain + '/api/articles';
 
@@ -20,9 +10,15 @@ const url = environment.apiDomain + '/api/articles';
   providedIn: 'root',
 })
 export class ArticleService {
-  articles: Article[] | undefined;
-  errorMsg = '';
+  articles = signal<Article[] | undefined>(undefined);
+  errorMsg = signal('');
   http = inject(HttpClient);
+
+  constructor() {
+    if (this.articles() === undefined) {
+      this.load().subscribe();
+    }
+  }
 
   add(newArticle: NewArticle): Observable<void> {
     return of(undefined).pipe(
@@ -38,17 +34,17 @@ export class ArticleService {
     return of(undefined).pipe(
       tap(() => {
         console.log('start load');
-        this.errorMsg = '';
+        this.errorMsg.set('');
       }),
       switchMap(() => this.http.get<Article[]>(url)),
       delay(200),
       map((articles) => {
         console.log('articles: ', articles);
-        this.articles = articles;
+        this.articles.set(articles);
       }),
       catchError((err) => {
         console.log('err: ', err);
-        this.errorMsg = 'Technical Error';
+        this.errorMsg.set('Technical Error');
         throw err;
       }),
     );

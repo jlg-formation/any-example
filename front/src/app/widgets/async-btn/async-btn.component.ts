@@ -1,11 +1,10 @@
 import {
   Attribute,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   Output,
-  inject,
+  signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -30,14 +29,12 @@ import {
   imports: [FontAwesomeModule],
 })
 export class AsyncBtnComponent {
-  readonly cd = inject(ChangeDetectorRef);
-
   @Input() action: Observable<void> | Promise<void> = Promise.resolve();
   @Input() disabled = false;
   faCircleNotch = faCircleNotch;
   @Input()
   icon: IconDefinition = faCircleNotch;
-  isRunning = false;
+  isRunning = signal(false);
 
   @Output('setError')
   setErrorEmitter = new EventEmitter<string>();
@@ -49,7 +46,7 @@ export class AsyncBtnComponent {
       tap(() => {
         console.log('start action');
         this.setErrorEmitter.emit('');
-        this.isRunning = true;
+        this.isRunning.set(true);
       }),
       delay(200),
       switchMap(() => {
@@ -66,8 +63,7 @@ export class AsyncBtnComponent {
         return of(undefined);
       }),
       finalize(() => {
-        this.isRunning = false;
-        this.cd.markForCheck();
+        this.isRunning.set(false);
       }),
     );
   }

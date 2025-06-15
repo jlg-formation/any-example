@@ -1,19 +1,10 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import {
-  Observable,
-  catchError,
-  delay,
-  finalize,
-  map,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { NewArticle } from '../../interfaces/article';
 import { FG } from '../../interfaces/form';
@@ -32,13 +23,12 @@ import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 export default class CreateComponent {
   readonly articleService = inject(ArticleService);
   readonly blackListService = inject(BlackListService);
-  readonly cd = inject(ChangeDetectorRef);
   readonly errorService = inject(ErrorService);
   readonly fb = inject(FormBuilder);
   readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
-  errorMsg = '';
+  errorMsg = signal('');
   f = this.fb.group<FG<NewArticle>>({
     name: this.fb.nonNullable.control(
       'Truc',
@@ -55,13 +45,13 @@ export default class CreateComponent {
   faPlus = faPlus;
 
   setError(message: string) {
-    this.errorMsg = message;
+    this.errorMsg.set(message);
   }
 
   public submit(): Observable<void> {
     return of(undefined).pipe(
       tap(() => {
-        this.errorMsg = '';
+        this.errorMsg.set('');
       }),
       switchMap(() => this.articleService.add(this.f.getRawValue())),
       switchMap(() => this.articleService.load()),
@@ -70,12 +60,9 @@ export default class CreateComponent {
       catchError((err) => {
         console.log('err: ', err);
         if (err instanceof Error) {
-          this.errorMsg = err.message;
+          this.errorMsg.set(err.message);
         }
         return of(undefined);
-      }),
-      finalize(() => {
-        this.cd.markForCheck();
       }),
     );
   }
