@@ -4,7 +4,7 @@ import { LegalComponent } from './routes/legal/legal.component';
 import { stockRoutes } from './stock/stock.routes';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'legal', component: LegalComponent },
-  { path: 'stock', loadChildren: () => stockRoutes },
+  { path: '', component: HomeComponent, title: 'Accueil' },
+  { path: 'legal', component: LegalComponent, title: 'Mentions Légales' },
+  { path: 'stock', loadChildren: () => stockRoutes, title: 'Stock' },
 ];
