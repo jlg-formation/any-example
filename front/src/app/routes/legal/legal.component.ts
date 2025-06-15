@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { Subscription, interval, tap } from 'rxjs';
+import { interval, tap } from 'rxjs';
 
 @Component({
   selector: 'app-legal',
@@ -9,8 +10,7 @@ import { Subscription, interval, tap } from 'rxjs';
   styleUrls: ['./legal.component.scss'],
   imports: [CommonModule],
 })
-export class LegalComponent implements OnInit, OnDestroy {
-  subscription: Subscription;
+export class LegalComponent implements OnInit {
   time = signal(new Date());
   startTime = new Date();
   chrono = computed(() =>
@@ -18,18 +18,15 @@ export class LegalComponent implements OnInit, OnDestroy {
   );
 
   constructor() {
-    this.subscription = interval(1000)
+    interval(1000)
       .pipe(
         tap(() => {
           console.log('adjusting time');
           this.time.set(new Date());
         }),
+        takeUntilDestroyed(),
       )
       .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {}
