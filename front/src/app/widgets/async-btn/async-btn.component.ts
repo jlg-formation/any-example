@@ -39,14 +39,14 @@ export class AsyncBtnComponent {
   icon: IconDefinition = faCircleNotch;
   isRunning = false;
 
-  @Output()
-  setError = new EventEmitter<string>();
+  @Output('setError')
+  setErrorEmitter = new EventEmitter<string>();
 
   startAction(): Observable<void> {
     return of(undefined).pipe(
       tap(() => {
         console.log('start action');
-        this.setError.emit('');
+        this.setErrorEmitter.emit('');
         this.isRunning = true;
       }),
       delay(200),
@@ -59,7 +59,7 @@ export class AsyncBtnComponent {
       catchError((err) => {
         console.log('err: ', err);
         if (err instanceof Error) {
-          this.setError.emit(err.message);
+          this.setErrorEmitter.emit(err.message);
         }
         return of(undefined);
       }),
