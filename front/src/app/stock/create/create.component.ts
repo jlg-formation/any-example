@@ -1,10 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -24,36 +19,30 @@ import { blackListValidator } from '../../validators/black-list.validator';
   styleUrl: './create.component.scss',
   imports: [ReactiveFormsModule, FontAwesomeModule],
 })
-export default class CreateComponent implements OnInit {
-  public errorMsg = '';
-  public f: FormGroup<FG<NewArticle>>;
-  public faCircleNotch = faCircleNotch;
-  public faPlus = faPlus;
-  public isAdding = false;
+export default class CreateComponent {
+  readonly articleService = inject(ArticleService);
+  readonly blackListService = inject(BlackListService);
+  readonly errorService = inject(ErrorService);
+  readonly fb = inject(FormBuilder);
+  readonly route = inject(ActivatedRoute);
+  readonly router = inject(Router);
 
-  constructor(
-    private articleService: ArticleService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private blackListService: BlackListService,
-    protected errorService: ErrorService,
-  ) {
-    this.f = this.fb.group<FG<NewArticle>>({
-      name: this.fb.nonNullable.control(
-        'Truc',
-        [Validators.required, Validators.maxLength(10)],
-        [blackListValidator(this.blackListService)],
-      ),
-      price: this.fb.nonNullable.control(0, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      qty: this.fb.nonNullable.control(1, Validators.required),
-    });
-  }
-
-  public ngOnInit(): void {}
+  errorMsg = '';
+  f = this.fb.group<FG<NewArticle>>({
+    name: this.fb.nonNullable.control(
+      'Truc',
+      [Validators.required, Validators.maxLength(10)],
+      [blackListValidator(this.blackListService)],
+    ),
+    price: this.fb.nonNullable.control(0, [
+      Validators.required,
+      Validators.min(0),
+    ]),
+    qty: this.fb.nonNullable.control(1, Validators.required),
+  });
+  faCircleNotch = faCircleNotch;
+  faPlus = faPlus;
+  isAdding = false;
 
   public async submit() {
     try {

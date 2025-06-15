@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircleNotch,
@@ -26,10 +26,8 @@ export default class ListComponent implements OnInit {
   isRemoving = false;
   errorMsg = '';
 
-  constructor(
-    public articleService: ArticleService,
-    public cd: ChangeDetectorRef,
-  ) {}
+  articleService = inject(ArticleService);
+  cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     (async () => {

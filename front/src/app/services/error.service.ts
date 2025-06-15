@@ -33,6 +33,4 @@ export class ErrorService {
     }
     return 'Champ incorrect pour raison inconnue.';
   }
-
-  constructor() {}
 }

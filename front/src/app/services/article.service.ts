@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Article, NewArticle } from '../interfaces/article';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -12,8 +12,7 @@ const url = environment.apiDomain + '/api/articles';
 export class ArticleService {
   articles: Article[] | undefined;
   errorMsg = '';
-
-  constructor(private http: HttpClient) {}
+  http = inject(HttpClient);
 
   async add(newArticle: NewArticle) {
     await lastValueFrom(

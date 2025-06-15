@@ -7,12 +7,8 @@ import { TITLE_PREFIX } from '../app.config';
   providedIn: 'root',
 })
 export class PrefixTitleStrategyService extends TitleStrategy {
-  constructor(
-    private readonly title: Title,
-    @Inject(TITLE_PREFIX) private readonly prefix: string,
-  ) {
-    super();
-  }
+  title = inject(Title);
+  prefix = inject(TITLE_PREFIX);
 
   override updateTitle(snapshot: RouterStateSnapshot): void {
     const title = this.buildTitle(snapshot);
