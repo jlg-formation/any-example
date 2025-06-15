@@ -53,9 +53,6 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
-      zone.js:
-        specifier: ~0.15.0
-        version: 0.15.1
     devDependencies:
       '@angular/build':
         specifier: ^20.0.2
@@ -5194,4 +5191,5 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
-  zone.js@0.15.1: {}
+  zone.js@0.15.1:
+    optional: true
