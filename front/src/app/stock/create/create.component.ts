@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -8,13 +8,11 @@ import {
   catchError,
   delay,
   finalize,
-  lastValueFrom,
   map,
   Observable,
   of,
   switchMap,
   tap,
-  timer,
 } from 'rxjs';
 
 import { NewArticle } from '../../interfaces/article';
@@ -60,6 +58,7 @@ export default class CreateComponent {
     return of(undefined).pipe(
       tap(() => {
         this.isAdding = true;
+        this.errorMsg = '';
       }),
       delay(1000),
       switchMap(() => this.articleService.add(this.f.getRawValue())),
