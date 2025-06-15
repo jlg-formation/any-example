@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircleNotch,
@@ -26,12 +26,18 @@ export default class ListComponent implements OnInit {
   isRemoving = false;
   errorMsg = '';
 
-  constructor(public articleService: ArticleService) {}
+  constructor(
+    public articleService: ArticleService,
+    public cd: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    if (this.articleService.articles === undefined) {
-      this.articleService.load();
-    }
+    (async () => {
+      if (this.articleService.articles === undefined) {
+        await this.articleService.load();
+        this.cd.markForCheck();
+      }
+    })();
   }
 
   async refresh() {
@@ -44,6 +50,7 @@ export default class ListComponent implements OnInit {
       this.errorMsg = 'Erreur Technique';
     } finally {
       this.isRefreshing = false;
+      this.cd.markForCheck();
     }
   }
 
@@ -60,6 +67,7 @@ export default class ListComponent implements OnInit {
       this.errorMsg = 'Cannot suppress';
     } finally {
       this.isRemoving = false;
+      this.cd.markForCheck();
     }
   }
 
