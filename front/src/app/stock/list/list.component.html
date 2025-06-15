@@ -2,8 +2,8 @@
   <h1>Liste des articles</h1>
   <div class="content">
     <div class="error">
-      @if (errorMsg) {
-        <span>Erreur: {{ errorMsg }}</span>
+      @if (errorMsg()) {
+        <span>Erreur: {{ errorMsg() }}</span>
       }
     </div>
     <nav>
@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (a of articleService.articles(); track a.id) {
+        @for (a of articleService.articles.value(); track a.id) {
           <tr [class.selected]="selectedArticles.has(a)" (click)="select(a)">
             <td class="name">{{ a.name }}</td>
             <td class="price">{{ a.price }} €</td>
@@ -43,10 +43,10 @@
           </tr>
         } @empty {
           <tr>
-            @if (articleService.articles !== undefined) {
-              <td colspan="3">Pas d'article</td>
-            } @else if (articleService.errorMsg() === "") {
+            @if (articleService.articles.status() === "loading") {
               <td colspan="3">Loading...</td>
+            } @else if (articleService.articles !== undefined) {
+              <td colspan="3">Pas d'article</td>
             } @else {
               <td colspan="3">
                 <strong> Erreur: {{ articleService.errorMsg() }} </strong>

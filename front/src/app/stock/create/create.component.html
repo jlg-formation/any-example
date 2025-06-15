@@ -23,8 +23,8 @@
       </span>
     </label>
     <div class="error">
-      @if (errorMsg) {
-        <span>Erreur : {{ errorMsg }}</span>
+      @if (errorMsg()) {
+        <span>Erreur : {{ errorMsg() }}</span>
       }
     </div>
     <div class="buttons">

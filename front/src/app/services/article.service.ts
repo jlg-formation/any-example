@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, delay, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, delay, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Article, NewArticle } from '../interfaces/article';
 
@@ -10,15 +10,9 @@ const url = environment.apiDomain + '/api/articles';
   providedIn: 'root',
 })
 export class ArticleService {
-  articles = signal<Article[] | undefined>(undefined);
   errorMsg = signal('');
   http = inject(HttpClient);
-
-  constructor() {
-    if (this.articles() === undefined) {
-      this.load().subscribe();
-    }
-  }
+  articles = httpResource<Article[]>(() => url);
 
   add(newArticle: NewArticle): Observable<void> {
     return of(undefined).pipe(
@@ -35,12 +29,7 @@ export class ArticleService {
       tap(() => {
         console.log('start load');
         this.errorMsg.set('');
-      }),
-      switchMap(() => this.http.get<Article[]>(url)),
-      delay(200),
-      map((articles) => {
-        console.log('articles: ', articles);
-        this.articles.set(articles);
+        this.articles.reload();
       }),
       catchError((err) => {
         console.log('err: ', err);
