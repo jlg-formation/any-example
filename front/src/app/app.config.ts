@@ -2,7 +2,7 @@ import {
   ApplicationConfig,
   InjectionToken,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, TitleStrategy } from '@angular/router';
 
@@ -15,7 +15,7 @@ export const TITLE_PREFIX = new InjectionToken<string>('TITLE_PREFIX');
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(),
     {
