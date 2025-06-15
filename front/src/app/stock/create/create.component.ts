@@ -21,7 +21,7 @@ import { blackListValidator } from '../../validators/black-list.validator';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss'],
+  styleUrl: './create.component.scss',
   imports: [ReactiveFormsModule, FontAwesomeModule],
 })
 export default class CreateComponent implements OnInit {

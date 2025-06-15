@@ -7,7 +7,7 @@ import { interval, tap } from 'rxjs';
 @Component({
   selector: 'app-legal',
   templateUrl: './legal.component.html',
-  styleUrls: ['./legal.component.scss'],
+  styleUrl: './legal.component.scss',
   imports: [CommonModule],
 })
 export class LegalComponent implements OnInit {

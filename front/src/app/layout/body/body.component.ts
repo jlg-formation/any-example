@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-body',
   templateUrl: './body.component.html',
-  styleUrls: ['./body.component.scss'],
+  styleUrl: './body.component.scss',
   imports: [RouterOutlet],
 })
 export class BodyComponent implements OnInit {
