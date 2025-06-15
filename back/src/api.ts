@@ -26,6 +26,10 @@ app.use(json());
 
 app.post("/articles", (req, res) => {
   const newArticle: NewArticle = req.body;
+  if (newArticle.name === "bad") {
+    res.status(400).end();
+    return;
+  }
   const id = generateId();
   const article = { ...newArticle, id };
   articles.push(article);

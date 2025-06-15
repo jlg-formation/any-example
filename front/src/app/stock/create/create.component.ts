@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,6 +37,7 @@ export default class CreateComponent {
   readonly fb = inject(FormBuilder);
   readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
+  readonly cd = inject(ChangeDetectorRef);
 
   errorMsg = '';
   f = this.fb.group<FG<NewArticle>>({
@@ -74,6 +75,7 @@ export default class CreateComponent {
       }),
       finalize(() => {
         this.isAdding = false;
+        this.cd.markForCheck();
       }),
     );
   }
