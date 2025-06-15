@@ -41,7 +41,7 @@ export class ArticleService {
         this.errorMsg = '';
       }),
       switchMap(() => this.http.get<Article[]>(url)),
-      delay(1000),
+      delay(200),
       map((articles) => {
         console.log('articles: ', articles);
         this.articles = articles;
@@ -56,7 +56,7 @@ export class ArticleService {
 
   remove(ids: string[]): Observable<void> {
     return of(undefined).pipe(
-      delay(1000),
+      delay(200),
       switchMap(() =>
         this.http.delete<void>(url, {
           body: ids,

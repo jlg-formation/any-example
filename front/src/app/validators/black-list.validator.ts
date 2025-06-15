@@ -12,7 +12,7 @@ export const blackListValidator: (
   (blackListService) =>
   (control: AbstractControl): Observable<ValidationErrors | null> => {
     return of(undefined).pipe(
-      delay(1000),
+      delay(500),
       switchMap(() => {
         return blackListService.isBlackListed(control.value);
       }),

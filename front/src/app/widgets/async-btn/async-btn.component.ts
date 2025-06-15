@@ -49,7 +49,7 @@ export class AsyncBtnComponent {
         this.setError.emit('');
         this.isRunning = true;
       }),
-      delay(1000),
+      delay(200),
       switchMap(() => {
         if (this.action instanceof Observable) {
           return this.action;
