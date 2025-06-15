@@ -28,18 +28,16 @@
       }
     </div>
     <div class="buttons">
-      <button
+      <app-async-btn
         class="primary"
         type="submit"
-        [disabled]="isAdding || f.invalid || f.pending"
-        (click)="submit().subscribe()"
+        [disabled]="f.invalid || f.pending"
+        [icon]="faPlus"
+        [action]="submit()"
+        (setError)="setError($event)"
       >
-        <fa-icon
-          [icon]="isAdding ? faCircleNotch : faPlus"
-          [spin]="isAdding"
-        ></fa-icon>
         <span>Ajouter</span>
-      </button>
+      </app-async-btn>
     </div>
   </form>
 </main>

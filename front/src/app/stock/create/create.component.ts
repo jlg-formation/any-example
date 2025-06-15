@@ -5,11 +5,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import {
+  Observable,
   catchError,
   delay,
   finalize,
   map,
-  Observable,
   of,
   switchMap,
   tap,
@@ -21,21 +21,22 @@ import { ArticleService } from '../../services/article.service';
 import { BlackListService } from '../../services/black-list.service';
 import { ErrorService } from '../../services/error.service';
 import { blackListValidator } from '../../validators/black-list.validator';
+import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
-  imports: [ReactiveFormsModule, FontAwesomeModule],
+  imports: [ReactiveFormsModule, FontAwesomeModule, AsyncBtnComponent],
 })
 export default class CreateComponent {
   readonly articleService = inject(ArticleService);
   readonly blackListService = inject(BlackListService);
+  readonly cd = inject(ChangeDetectorRef);
   readonly errorService = inject(ErrorService);
   readonly fb = inject(FormBuilder);
   readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
-  readonly cd = inject(ChangeDetectorRef);
 
   errorMsg = '';
   f = this.fb.group<FG<NewArticle>>({
@@ -52,15 +53,16 @@ export default class CreateComponent {
   });
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
-  isAdding = false;
+
+  setError(message: string) {
+    this.errorMsg = message;
+  }
 
   public submit(): Observable<void> {
     return of(undefined).pipe(
       tap(() => {
-        this.isAdding = true;
         this.errorMsg = '';
       }),
-      delay(1000),
       switchMap(() => this.articleService.add(this.f.getRawValue())),
       switchMap(() => this.articleService.load()),
       switchMap(() => this.router.navigate(['..'], { relativeTo: this.route })),
@@ -73,7 +75,6 @@ export default class CreateComponent {
         return of(undefined);
       }),
       finalize(() => {
-        this.isAdding = false;
         this.cd.markForCheck();
       }),
     );
