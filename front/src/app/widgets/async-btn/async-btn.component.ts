@@ -1,12 +1,4 @@
-import {
-  Attribute,
-  Component,
-  EventEmitter,
-  Output,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Attribute, Component, input, output, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
