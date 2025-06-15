@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -7,28 +7,28 @@ import {
   faRotateRight,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { catchError, finalize, map, Observable, of, switchMap } from 'rxjs';
+
+import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
+
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
+import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
-  imports: [RouterLink, FontAwesomeModule],
+  imports: [RouterLink, FontAwesomeModule, AsyncBtnComponent],
 })
 export default class ListComponent implements OnInit {
+  articleService = inject(ArticleService);
+  cd = inject(ChangeDetectorRef);
+  errorMsg = '';
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashAlt = faTrashAlt;
-  isRefreshing = false;
   selectedArticles = new Set<Article>();
-  isRemoving = false;
-  errorMsg = '';
-
-  articleService = inject(ArticleService);
-  cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     of(undefined)
@@ -44,8 +44,6 @@ export default class ListComponent implements OnInit {
   refresh(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
-        this.isRefreshing = true;
         return this.articleService.load();
       }),
       catchError((err) => {
@@ -54,7 +52,6 @@ export default class ListComponent implements OnInit {
         return of(undefined);
       }),
       finalize(() => {
-        this.isRefreshing = false;
         this.cd.markForCheck();
       }),
     );
@@ -64,7 +61,6 @@ export default class ListComponent implements OnInit {
     return of(undefined).pipe(
       switchMap(() => {
         this.errorMsg = '';
-        this.isRemoving = true;
         const ids = [...this.selectedArticles].map((a) => a.id);
         return this.articleService.remove(ids);
       }),
@@ -80,7 +76,6 @@ export default class ListComponent implements OnInit {
         return of(undefined);
       }),
       finalize(() => {
-        this.isRefreshing = false;
         this.cd.markForCheck();
       }),
     );
@@ -92,5 +87,9 @@ export default class ListComponent implements OnInit {
       return;
     }
     this.selectedArticles.add(a);
+  }
+
+  setError(message: string) {
+    this.errorMsg = message;
   }
 }
