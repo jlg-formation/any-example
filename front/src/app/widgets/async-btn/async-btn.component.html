@@ -1,10 +1,10 @@
 <button
   [class]="className"
   (click)="startAction().subscribe()"
-  [disabled]="disabled || isRunning()"
+  [disabled]="disabled() || isRunning()"
 >
   <fa-icon
-    [icon]="isRunning() ? faCircleNotch : icon"
+    [icon]="isRunning() ? faCircleNotch : icon()"
     [spin]="isRunning()"
   ></fa-icon>
   <ng-content></ng-content>

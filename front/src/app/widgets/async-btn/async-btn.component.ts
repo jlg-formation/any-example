@@ -2,15 +2,12 @@ import {
   Attribute,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  IconDefinition,
-  faCircleNotch,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 import {
   Observable,
@@ -29,11 +26,10 @@ import {
   imports: [FontAwesomeModule],
 })
 export class AsyncBtnComponent {
-  @Input() action: Observable<void> | Promise<void> = Promise.resolve();
-  @Input() disabled = false;
+  action = input<Observable<void> | Promise<void>>(Promise.resolve());
+  disabled = input(false);
   faCircleNotch = faCircleNotch;
-  @Input()
-  icon: IconDefinition = faCircleNotch;
+  icon = input(faCircleNotch);
   isRunning = signal(false);
 
   @Output('setError')
@@ -50,10 +46,7 @@ export class AsyncBtnComponent {
       }),
       delay(200),
       switchMap(() => {
-        if (this.action instanceof Observable) {
-          return this.action;
-        }
-        return this.action;
+        return this.action();
       }),
       catchError((err) => {
         console.log('err: ', err);
