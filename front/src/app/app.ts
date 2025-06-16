@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { BodyComponent } from './layout/body/body.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HeaderComponent } from './layout/header/header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [HeaderComponent, FooterComponent, BodyComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   protected title = 'front';

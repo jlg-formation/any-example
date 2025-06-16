@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+@use "../node_modules/normalize.css/normalize.css";
+@use "../node_modules/sanitize.css/sanitize.css";
+
+@use "./scss/button.scss";
+@use "./scss/form.scss";
+
+body {
+  font-family: sans-serif;
+}
+
+main {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5em;
+  align-items: center;
+  padding: 0.5em;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    align-self: flex-start;
+  }
+}
