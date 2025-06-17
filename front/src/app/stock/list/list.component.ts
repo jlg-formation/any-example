@@ -31,7 +31,7 @@ export default class ListComponent implements OnInit {
   constructor(public articleService: ArticleService) {}
 
   ngOnInit(): void {
-    if (this.articleService.articles$.value === undefined) {
+    if (this.articleService.articles() === undefined) {
       this.articleService.load().subscribe();
     }
   }

@@ -38,18 +38,18 @@
         </tr>
       </thead>
       <tbody>
-        @if ((articleService.articles$ | async) === undefined) {
+        @if (articleService.articles() === undefined) {
           <tr>
-            @if (articleService.errorMsg$.value === "") {
+            @if (articleService.errorMsg() === "") {
               <td colspan="3">Loading...</td>
             } @else {
               <td colspan="3">
-                <strong> Erreur: {{ articleService.errorMsg$.value }} </strong>
+                <strong> Erreur: {{ articleService.errorMsg() }} </strong>
               </td>
             }
           </tr>
         } @else {
-          @for (a of articleService.articles$ | async; track a.id) {
+          @for (a of articleService.articles(); track a.id) {
             <tr [class.selected]="selectedArticles.has(a)" (click)="select(a)">
               <td class="name">{{ a.name }}</td>
               <td class="price">{{ a.price }} €</td>
