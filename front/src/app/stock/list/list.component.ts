@@ -7,9 +7,9 @@ import {
   faRotateRight,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -35,33 +35,43 @@ export default class ListComponent implements OnInit {
     }
   }
 
-  async refresh() {
-    try {
-      this.errorMsg = '';
-      this.isRefreshing = true;
-      await lastValueFrom(this.articleService.load());
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Rechargement impossible';
-    } finally {
-      this.isRefreshing = false;
-    }
+  refresh(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRefreshing = true;
+        return this.articleService.load();
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Rechargement impossible';
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRefreshing = false;
+      }),
+    );
   }
 
-  async remove() {
-    try {
-      this.errorMsg = '';
-      this.isRemoving = true;
-      const ids = [...this.selectedArticles].map((a) => a.id);
-      await this.articleService.remove(ids);
-      await lastValueFrom(this.articleService.load());
-      this.selectedArticles.clear();
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Cannot suppress';
-    } finally {
-      this.isRemoving = false;
-    }
+  remove(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRemoving = true;
+        const ids = [...this.selectedArticles].map((a) => a.id);
+        return this.articleService.remove(ids);
+      }),
+      switchMap(() => this.articleService.load()),
+      tap(() => this.selectedArticles.clear()),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Cannot suppress';
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRemoving = false;
+      }),
+    );
   }
 
   select(a: Article) {

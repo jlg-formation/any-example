@@ -1,17 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Article, NewArticle } from '../interfaces/article';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError, delay, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import {
-  delay,
-  lastValueFrom,
-  catchError,
-  switchMap,
-  timer,
-  Observable,
-  of,
-  map,
-} from 'rxjs';
+import { Article, NewArticle } from '../interfaces/article';
 
 const url = environment.apiDomain + '/api/articles';
 
@@ -52,19 +43,18 @@ export class ArticleService {
     );
   }
 
-  async remove(ids: string[]) {
-    await lastValueFrom(
-      timer(1000).pipe(
-        switchMap(() =>
-          this.http.delete<void>(url, {
-            body: ids,
-          }),
-        ),
-        catchError((err) => {
-          console.log('err: ', err);
-          throw new Error('Technical error');
+  remove(ids: string[]): Observable<void> {
+    return of(undefined).pipe(
+      delay(1000),
+      switchMap(() =>
+        this.http.delete<void>(url, {
+          body: ids,
         }),
       ),
+      catchError((err) => {
+        console.log('err: ', err);
+        throw new Error('Technical error');
+      }),
     );
   }
 }
