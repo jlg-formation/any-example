@@ -10,12 +10,13 @@ import {
 import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  imports: [FontAwesomeModule, RouterLink],
+  imports: [FontAwesomeModule, RouterLink, AsyncPipe],
 })
 export default class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
@@ -30,7 +31,7 @@ export default class ListComponent implements OnInit {
   constructor(public articleService: ArticleService) {}
 
   ngOnInit(): void {
-    if (this.articleService.articles === undefined) {
+    if (this.articleService.articles$.value === undefined) {
       this.articleService.load().subscribe();
     }
   }
