@@ -16,7 +16,7 @@ import { ArticleService } from '../../services/article.service';
   styleUrls: ['./list.component.scss'],
   imports: [FontAwesomeModule, RouterLink],
 })
-export class ListComponent implements OnInit {
+export default class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;

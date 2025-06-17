@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
-import { CreateComponent } from './create/create.component';
-import { ListComponent } from './list/list.component';
 
-export const stockRoutes: Routes = [
-  { path: '', component: ListComponent },
-  { path: 'create', component: CreateComponent },
-];
-
+export default [
+  { path: '', loadComponent: () => import('./list/list.component') },
+  { path: 'create', loadComponent: () => import('./create/create.component') },
+] satisfies Routes;
