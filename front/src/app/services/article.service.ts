@@ -11,7 +11,6 @@ const url = environment.apiDomain + '/api/articles';
 })
 export class ArticleService {
   articles = signal<Article[] | undefined>(undefined);
-
   errorMsg = signal('');
 
   constructor(private http: HttpClient) {}
