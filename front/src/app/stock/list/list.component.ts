@@ -41,6 +41,7 @@ export default class ListComponent implements OnInit {
       await this.articleService.load();
     } catch (err) {
       console.log('err: ', err);
+      this.errorMsg = 'Rechargement impossible';
     } finally {
       this.isRefreshing = false;
     }
