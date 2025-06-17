@@ -10,13 +10,12 @@ import {
 import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  imports: [FontAwesomeModule, RouterLink, AsyncPipe],
+  imports: [FontAwesomeModule, RouterLink],
 })
 export default class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
