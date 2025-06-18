@@ -12,22 +12,21 @@ import {
   catchError,
   delay,
   finalize,
-  lastValueFrom,
   map,
   Observable,
   of,
   switchMap,
   tap,
-  timer,
 } from 'rxjs';
 import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
+import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
-  imports: [FontAwesomeModule, ReactiveFormsModule],
+  imports: [FontAwesomeModule, ReactiveFormsModule, AsyncBtnComponent],
 })
 export default class CreateComponent implements OnInit {
   errorMsg = '';
