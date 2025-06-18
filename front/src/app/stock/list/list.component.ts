@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -12,17 +12,18 @@ import { Observable, catchError, finalize, of, switchMap, tap } from 'rxjs';
 
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
+import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  imports: [FontAwesomeModule, RouterLink],
+  imports: [FontAwesomeModule, RouterLink, AsyncBtnComponent],
 })
 export default class ListComponent implements OnInit {
   protected readonly articleService = inject(ArticleService);
 
-  errorMsg = '';
+  errorMsg = signal('');
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;
@@ -38,41 +39,17 @@ export default class ListComponent implements OnInit {
   }
 
   refresh(): Observable<void> {
-    return of(undefined).pipe(
-      switchMap(() => {
-        this.errorMsg = '';
-        this.isRefreshing = true;
-        return this.articleService.load();
-      }),
-      catchError((err) => {
-        console.log('err: ', err);
-        this.errorMsg = 'Rechargement impossible';
-        return of(undefined);
-      }),
-      finalize(() => {
-        this.isRefreshing = false;
-      }),
-    );
+    return this.articleService.load();
   }
 
   remove(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
-        this.isRemoving = true;
         const ids = [...this.selectedArticles].map((a) => a.id);
         return this.articleService.remove(ids);
       }),
       switchMap(() => this.articleService.load()),
       tap(() => this.selectedArticles.clear()),
-      catchError((err) => {
-        console.log('err: ', err);
-        this.errorMsg = 'Cannot suppress';
-        return of(undefined);
-      }),
-      finalize(() => {
-        this.isRemoving = false;
-      }),
     );
   }
 
@@ -82,5 +59,9 @@ export default class ListComponent implements OnInit {
       return;
     }
     this.selectedArticles.add(a);
+  }
+
+  setErrorMsg(message: string) {
+    this.errorMsg.set(message);
   }
 }
