@@ -16,6 +16,7 @@ import { ArticleService } from '../../services/article.service';
 import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 import { getErrorMessage } from '../../utils/getErrorMessage.utils';
 import { blackListValidator } from '../../validators/black-list.validator';
+import { blackListAsyncValidator } from '../../validators/black-list.async-validator';
 
 @Component({
   selector: 'app-create',
@@ -32,8 +33,8 @@ export default class CreateComponent implements OnInit {
   f = new FormGroup({
     name: new FormControl(
       'Truc',
-      [Validators.required, Validators.maxLength(10)],
-      [blackListValidator],
+      [Validators.required, Validators.maxLength(10), blackListValidator],
+      [blackListAsyncValidator],
     ),
     price: new FormControl(0, [Validators.required]),
     qty: new FormControl(1, [Validators.required]),

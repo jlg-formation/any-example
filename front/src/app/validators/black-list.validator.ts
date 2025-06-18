@@ -1,25 +1,14 @@
-import {
-  AbstractControl,
-  AsyncValidatorFn,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
-import { delay, map, Observable, of } from 'rxjs';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export const blackListValidator: AsyncValidatorFn = (
+export const blackListValidator: ValidatorFn = (
   control: AbstractControl,
-): Observable<ValidationErrors | null> => {
-  return of(undefined).pipe(
-    delay(500),
-    map(() => {
-      console.log('control.value: ', control.value);
+): ValidationErrors | null => {
+  console.log('control.value: ', control.value);
 
-      if (['zut', 'crotte'].includes(control.value)) {
-        return {
-          blackList: true,
-        };
-      }
-      return null;
-    }),
-  );
+  if (['zut', 'crotte'].includes(control.value)) {
+    return {
+      blackList: true,
+    };
+  }
+  return null;
 };
