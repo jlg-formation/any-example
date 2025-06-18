@@ -22,15 +22,12 @@ export class AsyncBtnComponent {
   action: Observable<void> = of(undefined);
 
   doAction() {
-    console.log('doAction');
     return of(undefined).pipe(
       switchMap(() => {
-        console.log('doAction');
         this.isRunning = true;
         return this.action;
       }),
       catchError((err) => {
-        console.log('err: ', err);
         return of(undefined);
       }),
       finalize(() => {
