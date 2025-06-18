@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   inject,
+  input,
   Input,
   Output,
   signal,
@@ -19,15 +20,15 @@ import { catchError, finalize, Observable, of, switchMap } from 'rxjs';
   styleUrl: './async-btn.component.scss',
 })
 export class AsyncBtnComponent {
-  @Input('class')
-  className = '';
+  className = input('', {
+    alias: 'class',
+  });
   faCircleNotch = faCircleNotch;
-  @Input()
-  icon: IconDefinition | undefined = undefined;
+
+  icon = input<IconDefinition>(faCircleNotch);
   isRunning = signal(false);
 
-  @Input()
-  action: Observable<void> = of(undefined);
+  action = input<Observable<void>>(of(undefined));
 
   @Output()
   setError = new EventEmitter<string>();
@@ -37,7 +38,7 @@ export class AsyncBtnComponent {
       switchMap(() => {
         this.setError.emit('');
         this.isRunning.set(true);
-        return this.action;
+        return this.action();
       }),
       catchError((err) => {
         this.setError.emit('Erreur Technique');

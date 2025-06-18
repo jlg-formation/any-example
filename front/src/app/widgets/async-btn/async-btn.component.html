@@ -1,11 +1,11 @@
 <button
-  [class]="className"
+  [class]="className()"
   [disabled]="isRunning()"
   (click)="doAction().subscribe()"
 >
-  @if (icon !== undefined) {
+  @if (icon() !== faCircleNotch) {
     <fa-icon
-      [icon]="isRunning() ? faCircleNotch : icon"
+      [icon]="isRunning() ? faCircleNotch : icon()"
       [spin]="isRunning()"
     ></fa-icon>
   }
