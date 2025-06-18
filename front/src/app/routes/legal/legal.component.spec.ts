@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LegalComponent } from './legal.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from '../../app.routes';
 
 describe('LegalComponent', () => {
   let component: LegalComponent;
@@ -8,9 +12,13 @@ describe('LegalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LegalComponent ]
-    })
-    .compileComponents();
+      providers: [
+        provideZonelessChangeDetection(),
+        provideHttpClient(),
+        provideRouter(routes),
+      ],
+      imports: [LegalComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

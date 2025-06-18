@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import ListComponent from './list.component';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { routes } from '../../app.routes';
 
 describe('ListComponent', () => {
   let component: ListComponent;
@@ -8,7 +12,12 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ListComponent],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideHttpClient(),
+        provideRouter(routes),
+      ],
+      imports: [ListComponent],
     }).compileComponents();
   });
 
