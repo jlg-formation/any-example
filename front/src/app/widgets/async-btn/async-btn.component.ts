@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
@@ -20,8 +20,7 @@ export class AsyncBtnComponent {
 
   @Input()
   action: Observable<void> = of(undefined);
-
-  constructor(readonly cd: ChangeDetectorRef) {}
+  cd = inject(ChangeDetectorRef);
 
   doAction() {
     return of(undefined).pipe(

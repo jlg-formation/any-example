@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -7,7 +7,9 @@ import {
   faRotateRight,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
+
+import { Observable, catchError, finalize, of, switchMap, tap } from 'rxjs';
+
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 
@@ -18,16 +20,16 @@ import { ArticleService } from '../../services/article.service';
   imports: [FontAwesomeModule, RouterLink],
 })
 export default class ListComponent implements OnInit {
+  protected readonly articleService = inject(ArticleService);
+
+  errorMsg = '';
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashAlt = faTrashAlt;
   isRefreshing = false;
-  selectedArticles = new Set<Article>();
   isRemoving = false;
-  errorMsg = '';
-
-  constructor(public articleService: ArticleService) {}
+  selectedArticles = new Set<Article>();
 
   ngOnInit(): void {
     if (this.articleService.articles() === undefined) {

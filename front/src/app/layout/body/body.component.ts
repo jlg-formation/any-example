@@ -8,7 +8,5 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
 })
 export class BodyComponent implements OnInit {
-  constructor() {}
-
   ngOnInit(): void {}
 }

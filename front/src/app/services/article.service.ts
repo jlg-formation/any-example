@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { catchError, delay, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Article, NewArticle } from '../interfaces/article';
@@ -13,7 +13,7 @@ export class ArticleService {
   articles = signal<Article[] | undefined>(undefined);
   errorMsg = signal('');
 
-  constructor(private http: HttpClient) {}
+  http = inject(HttpClient);
 
   add(newArticle: NewArticle): Observable<void> {
     return of(undefined).pipe(

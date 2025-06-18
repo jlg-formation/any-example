@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,16 +8,18 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import {
+  Observable,
   catchError,
   delay,
   finalize,
   map,
-  Observable,
   of,
   switchMap,
   tap,
 } from 'rxjs';
+
 import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
@@ -29,6 +31,10 @@ import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
   imports: [FontAwesomeModule, ReactiveFormsModule, AsyncBtnComponent],
 })
 export default class CreateComponent implements OnInit {
+  private readonly articleService = inject(ArticleService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   errorMsg = '';
   f = new FormGroup({
     name: new FormControl('Truc', [Validators.required]),
@@ -38,12 +44,6 @@ export default class CreateComponent implements OnInit {
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   isAdding = false;
-
-  constructor(
-    private articleService: ArticleService,
-    private router: Router,
-    private route: ActivatedRoute,
-  ) {}
 
   ngOnInit(): void {}
 
