@@ -30,11 +30,11 @@ export default class CreateComponent implements OnInit {
 
   errorMsg = signal('');
   f = new FormGroup({
-    name: new FormControl('Truc', [
-      Validators.required,
-      Validators.maxLength(10),
-      blackListValidator,
-    ]),
+    name: new FormControl(
+      'Truc',
+      [Validators.required, Validators.maxLength(10)],
+      [blackListValidator],
+    ),
     price: new FormControl(0, [Validators.required]),
     qty: new FormControl(1, [Validators.required]),
   });
