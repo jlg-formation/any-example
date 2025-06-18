@@ -89,10 +89,9 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "karmaConfig": "karma.conf.js"
+            "styles": ["src/styles.scss"],
+            "karmaConfig": "karma.conf.js",
+            "codeCoverage": true
           }
         }
       }
