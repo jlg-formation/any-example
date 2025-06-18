@@ -1,6 +1,6 @@
 <button
   [class]="className()"
-  [disabled]="isRunning()"
+  [disabled]="isRunning() || disabled()"
   (click)="doAction().subscribe()"
 >
   @if (icon() !== faCircleNotch) {

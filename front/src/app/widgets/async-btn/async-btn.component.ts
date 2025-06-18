@@ -21,6 +21,8 @@ export class AsyncBtnComponent {
   isRunning = signal(false);
   setError = output<string>();
 
+  disabled = input(false);
+
   doAction() {
     return of(undefined).pipe(
       switchMap(() => {

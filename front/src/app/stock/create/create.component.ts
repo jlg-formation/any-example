@@ -14,6 +14,8 @@ import { Observable, catchError, delay, map, of, switchMap } from 'rxjs';
 import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
+import { getErrorMessage } from '../../utils/getErrorMessage.utils';
+import { blackListValidator } from '../../validators/black-list.validator';
 
 @Component({
   selector: 'app-create',
@@ -28,12 +30,17 @@ export default class CreateComponent implements OnInit {
 
   errorMsg = signal('');
   f = new FormGroup({
-    name: new FormControl('Truc', [Validators.required]),
+    name: new FormControl('Truc', [
+      Validators.required,
+      Validators.maxLength(10),
+      blackListValidator,
+    ]),
     price: new FormControl(0, [Validators.required]),
     qty: new FormControl(1, [Validators.required]),
   });
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
+  getErrorMessage = getErrorMessage;
 
   ngOnInit(): void {}
 
