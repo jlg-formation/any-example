@@ -1,17 +1,9 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  inject,
-  input,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import { catchError, finalize, Observable, of, switchMap } from 'rxjs';
+
+import { Observable, catchError, finalize, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-async-btn',
@@ -20,18 +12,14 @@ import { catchError, finalize, Observable, of, switchMap } from 'rxjs';
   styleUrl: './async-btn.component.scss',
 })
 export class AsyncBtnComponent {
+  action = input<Observable<void>>(of(undefined));
   className = input('', {
     alias: 'class',
   });
   faCircleNotch = faCircleNotch;
-
   icon = input<IconDefinition>(faCircleNotch);
   isRunning = signal(false);
-
-  action = input<Observable<void>>(of(undefined));
-
-  @Output()
-  setError = new EventEmitter<string>();
+  setError = output<string>();
 
   doAction() {
     return of(undefined).pipe(
