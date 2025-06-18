@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
@@ -16,25 +24,28 @@ export class AsyncBtnComponent {
   faCircleNotch = faCircleNotch;
   @Input()
   icon: IconDefinition | undefined = undefined;
-  isRunning = false;
+  isRunning = signal(false);
 
   @Input()
   action: Observable<void> = of(undefined);
-  cd = inject(ChangeDetectorRef);
+
+  @Output()
+  setError = new EventEmitter<string>();
 
   doAction() {
     return of(undefined).pipe(
       switchMap(() => {
-        this.isRunning = true;
+        this.setError.emit('');
+        this.isRunning.set(true);
         return this.action;
       }),
       catchError((err) => {
+        this.setError.emit('Erreur Technique');
         return of(undefined);
       }),
       finalize(() => {
         console.log('finalize');
-        this.isRunning = false;
-        this.cd.markForCheck();
+        this.isRunning.set(false);
       }),
     );
   }

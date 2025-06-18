@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,16 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import {
-  Observable,
-  catchError,
-  delay,
-  finalize,
-  map,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { Observable, catchError, delay, map, of, switchMap } from 'rxjs';
 
 import { NewArticle } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
@@ -35,7 +26,7 @@ export default class CreateComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  errorMsg = '';
+  errorMsg = signal('');
   f = new FormGroup({
     name: new FormControl('Truc', [Validators.required]),
     price: new FormControl(0, [Validators.required]),
@@ -43,30 +34,20 @@ export default class CreateComponent implements OnInit {
   });
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
-  isAdding = false;
 
   ngOnInit(): void {}
 
+  setErrorMsg(message: string) {
+    this.errorMsg.set(message);
+  }
+
   submit(): Observable<void> {
     return of(undefined).pipe(
-      tap(() => {
-        this.isAdding = true;
-      }),
       delay(1000),
       switchMap(() => this.articleService.add(this.f.value as NewArticle)),
       switchMap(() => this.articleService.load()),
       switchMap(() => this.router.navigate(['..'], { relativeTo: this.route })),
       map(() => {}),
-      catchError((err) => {
-        console.log('err: ', err);
-        if (err instanceof Error) {
-          this.errorMsg = err.message;
-        }
-        return of(undefined);
-      }),
-      finalize(() => {
-        this.isAdding = false;
-      }),
     );
   }
 }

@@ -1,12 +1,12 @@
 <button
   [class]="className"
-  [disabled]="isRunning"
+  [disabled]="isRunning()"
   (click)="doAction().subscribe()"
 >
   @if (icon !== undefined) {
     <fa-icon
-      [icon]="isRunning ? faCircleNotch : icon"
-      [spin]="isRunning"
+      [icon]="isRunning() ? faCircleNotch : icon"
+      [spin]="isRunning()"
     ></fa-icon>
   }
   <ng-content></ng-content>

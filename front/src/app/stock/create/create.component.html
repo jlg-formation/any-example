@@ -14,12 +14,17 @@
       <input type="number" formControlName="qty" />
     </label>
     <div class="error">
-      @if (errorMsg) {
-        <span>Erreur : {{ errorMsg }}</span>
+      @if (errorMsg()) {
+        <span>Erreur : {{ errorMsg() }}</span>
       }
     </div>
     <div class="buttons">
-      <app-async-btn class="primary" [icon]="faPlus" [action]="submit()">
+      <app-async-btn
+        class="primary"
+        [icon]="faPlus"
+        [action]="submit()"
+        (setError)="setErrorMsg($event)"
+      >
         <span>Ajouter</span>
       </app-async-btn>
     </div>
