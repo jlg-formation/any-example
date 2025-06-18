@@ -27,11 +27,12 @@ export class ArticleService {
 
   load(): Observable<void> {
     return of(undefined).pipe(
+      delay(1000),
       switchMap(() => {
         this.errorMsg.set('');
         return this.http.get<Article[]>(url);
       }),
-      delay(1000),
+
       map((articles) => {
         this.articles.set(articles);
       }),
