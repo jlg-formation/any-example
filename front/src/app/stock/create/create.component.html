@@ -20,7 +20,7 @@
       <button class="primary" [disabled]="isAdding">
         <fa-icon
           [icon]="isAdding ? faCircleNotch : faPlus"
-          [spin]="isAdding"
+          [animation]="isAdding ? 'spin' : undefined"
         ></fa-icon>
         <span>Ajouter</span>
       </button>

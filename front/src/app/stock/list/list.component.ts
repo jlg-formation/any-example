@@ -5,13 +5,14 @@ import {
   faRotateRight,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { Article } from 'src/app/interfaces/article';
-import { ArticleService } from 'src/app/services/article.service';
+import { Article } from '../../interfaces/article';
+import { ArticleService } from '../../services/article.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
+  standalone: false,
 })
 export class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
