@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "serve-index": "^1.9.1"
   },
   "devDependencies": {
