@@ -8,12 +8,13 @@ import { lastValueFrom, timer } from 'rxjs';
 import { getErrorMsg } from '../../../utils/getErrorMsg';
 import { ArticleService } from '../../services/article.service';
 import { blackListValidator } from '../../validators/blacklist.validator';
+import { AutofocusDirective } from '../../widgets/autofocus.directive';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, AutofocusDirective],
 })
 export class CreateComponent implements OnInit {
   errorMsg = '';

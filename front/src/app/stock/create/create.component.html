@@ -3,7 +3,7 @@
   <form [formGroup]="f" (ngSubmit)="submit()">
     <label>
       <span>Nom</span>
-      <input type="text" formControlName="name" />
+      <input type="text" formControlName="name" appAutofocus="select" />
       <span class="error-msg">{{ getErrorMsg(f.controls.name) }}</span>
     </label>
     <label>
