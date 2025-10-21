@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, Input, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, input, Input, InputSignal, OnInit } from '@angular/core';
 
 type Mode = 'select' | 'focus';
 
@@ -6,8 +6,7 @@ type Mode = 'select' | 'focus';
   selector: '[appAutofocus]',
 })
 export class AutofocusDirective implements OnInit {
-  @Input('appAutofocus')
-  mode: Mode = 'select';
+  mode = input<Mode>('select', { alias: 'appAutofocus' });
 
   elt: ElementRef<HTMLElement> = inject(ElementRef<HTMLElement>);
 
@@ -18,7 +17,7 @@ export class AutofocusDirective implements OnInit {
   ngOnInit(): void {
     console.log('this.mode: ', this.mode);
     if (this.elt.nativeElement instanceof HTMLInputElement) {
-      if (this.mode === 'select') {
+      if (this.mode() === 'select') {
         this.elt.nativeElement.select();
         return;
       }
