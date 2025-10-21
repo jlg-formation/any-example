@@ -7,6 +7,7 @@ import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, timer } from 'rxjs';
 import { getErrorMsg } from '../../../utils/getErrorMsg';
 import { ArticleService } from '../../services/article.service';
+import { blackListValidator } from '../../validators/blacklist.validator';
 
 @Component({
   selector: 'app-create',
@@ -17,7 +18,7 @@ import { ArticleService } from '../../services/article.service';
 export class CreateComponent implements OnInit {
   errorMsg = '';
   f = new FormBuilder().nonNullable.group({
-    name: ['Truc', [Validators.required, Validators.minLength(4)]],
+    name: ['Truc', [Validators.required, Validators.minLength(4), blackListValidator]],
     price: [0, [Validators.required]],
     qty: [0, [Validators.required]],
   });

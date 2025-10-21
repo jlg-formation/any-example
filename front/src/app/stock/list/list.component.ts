@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -27,11 +27,15 @@ export class ListComponent implements OnInit {
   isRemoving = false;
   errorMsg = '';
 
-  constructor(public articleService: ArticleService) {}
+  cdr = inject(ChangeDetectorRef);
+  articleService = inject(ArticleService);
 
   ngOnInit(): void {
     if (this.articleService.articles === undefined) {
-      this.articleService.load();
+      (async () => {
+        await this.articleService.load();
+        this.cdr.markForCheck();
+      })();
     }
   }
 
@@ -44,6 +48,7 @@ export class ListComponent implements OnInit {
       console.log('err: ', err);
     } finally {
       this.isRefreshing = false;
+      this.cdr.markForCheck();
     }
   }
 
@@ -60,6 +65,7 @@ export class ListComponent implements OnInit {
       this.errorMsg = 'Cannot suppress';
     } finally {
       this.isRemoving = false;
+      this.cdr.markForCheck();
     }
   }
 
