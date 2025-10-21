@@ -4,17 +4,22 @@
     <label>
       <span>Nom</span>
       <input type="text" formControlName="name" />
+      <span class="error-msg">{{ getErrorMsg(f.controls.name) }}</span>
     </label>
     <label>
       <span>Prix</span>
       <input type="number" formControlName="price" />
+      <span class="error-msg">{{ getErrorMsg(f.controls.price) }}</span>
     </label>
     <label>
       <span>Quantité</span>
       <input type="number" formControlName="qty" />
+      <span class="error-msg">{{ getErrorMsg(f.controls.qty) }}</span>
     </label>
     <div class="error">
-      <span *ngIf="errorMsg">Erreur : {{ errorMsg }}</span>
+      @if (errorMsg) {
+        <span>Erreur : {{ errorMsg }}</span>
+      }
     </div>
     <div class="buttons">
       <button class="primary" [disabled]="isAdding">
@@ -26,4 +31,5 @@
       </button>
     </div>
   </form>
+  {{ f.controls.name.errors | json }}
 </main>

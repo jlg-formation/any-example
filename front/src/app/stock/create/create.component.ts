@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, timer } from 'rxjs';
-import { NewArticle } from '../../interfaces/article';
+import { getErrorMsg } from '../../../utils/getErrorMsg';
 import { ArticleService } from '../../services/article.service';
 
 @Component({
@@ -16,15 +16,15 @@ import { ArticleService } from '../../services/article.service';
 })
 export class CreateComponent implements OnInit {
   errorMsg = '';
-  f = new FormGroup({
-    name: new FormControl('Truc', [Validators.required]),
-    price: new FormControl(0, [Validators.required]),
-    qty: new FormControl(1, [Validators.required]),
+  f = new FormBuilder().nonNullable.group({
+    name: ['Truc', [Validators.required, Validators.minLength(4)]],
+    price: [0, [Validators.required]],
+    qty: [0, [Validators.required]],
   });
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   isAdding = false;
-
+  getErrorMsg = getErrorMsg;
   constructor(
     private articleService: ArticleService,
     private router: Router,
@@ -37,7 +37,7 @@ export class CreateComponent implements OnInit {
     try {
       this.isAdding = true;
       await lastValueFrom(timer(1000));
-      await this.articleService.add(this.f.value as NewArticle);
+      await this.articleService.add(this.f.getRawValue());
       await this.articleService.load();
       await this.router.navigate(['..'], { relativeTo: this.route });
     } catch (err) {
