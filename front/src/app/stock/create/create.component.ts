@@ -28,7 +28,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {}

@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@use "../node_modules/normalize.css/normalize.css";
-@use "../node_modules/sanitize.css/sanitize.css";
+@use '../node_modules/normalize.css/normalize.css';
+@use '../node_modules/sanitize.css/sanitize.css';
 
-@use "./scss/button.scss";
-@use "./scss/form.scss";
+@use './scss/button.scss';
+@use './scss/form.scss';
 
 body {
   font-family: sans-serif;

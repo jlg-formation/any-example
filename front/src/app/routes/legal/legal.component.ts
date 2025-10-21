@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-legal',
   templateUrl: './legal.component.html',
   styleUrls: ['./legal.component.scss'],
-  standalone: true
+  standalone: true,
 })
 export class LegalComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
