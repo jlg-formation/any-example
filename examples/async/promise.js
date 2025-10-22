@@ -1,18 +1,5 @@
 import { readdir, readFile } from "fs";
-
-const promisify = (func) => {
-  return (...args) => {
-    return new Promise((resolve, reject) => {
-      func(...args, (err, result) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(result);
-      });
-    });
-  };
-};
+import { promisify } from "util";
 
 const readdirPromise = promisify(readdir);
 const readFilePromise = promisify(readFile);
