@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
-import { interval, Subscription, tap } from 'rxjs';
+import { Component, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-legal',
