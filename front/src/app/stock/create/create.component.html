@@ -1,6 +1,6 @@
 <main>
   <h1>Ajoute un article</h1>
-  <form [formGroup]="f" (ngSubmit)="submit().subscribe()">
+  <form [formGroup]="f">
     <label>
       <span>Nom</span>
       <input type="text" formControlName="name" appAutofocus="select" />
@@ -22,13 +22,14 @@
       }
     </div>
     <div class="buttons">
-      <button class="primary" [disabled]="isAdding">
-        <fa-icon
-          [icon]="isAdding ? faCircleNotch : faPlus"
-          [animation]="isAdding ? 'spin' : undefined"
-        ></fa-icon>
+      <app-async-btn
+        [isPrimary]="true"
+        [action]="submit()"
+        [icon]="faPlus"
+        (setError)="setError($event)"
+      >
         <span>Ajouter</span>
-      </button>
+      </app-async-btn>
     </div>
   </form>
 </main>

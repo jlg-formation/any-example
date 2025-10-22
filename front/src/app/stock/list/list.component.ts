@@ -11,24 +11,24 @@ import {
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
 import { catchError, finalize, lastValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
+import { AsyncBtnComponent } from '../../widgets/async-btn/async-btn.component';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  imports: [CommonModule, FontAwesomeModule, RouterLink],
+  imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncBtnComponent],
 })
 export class ListComponent implements OnInit {
   faCircleNotch = faCircleNotch;
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashAlt = faTrashAlt;
-  isRefreshing = false;
+
   selectedArticles = new Set<Article>();
-  isRemoving = false;
+
   errorMsg = signal('');
 
-  cdr = inject(ChangeDetectorRef);
   articleService = inject(ArticleService);
 
   ngOnInit(): void {
@@ -42,17 +42,7 @@ export class ListComponent implements OnInit {
   refresh(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg.set('');
-        this.isRefreshing = true;
         return this.articleService.load2();
-      }),
-      catchError((err) => {
-        console.log('err: ', err);
-        return of(undefined);
-      }),
-      finalize(() => {
-        this.isRefreshing = false;
-        this.cdr.markForCheck();
       }),
     );
   }
@@ -60,23 +50,12 @@ export class ListComponent implements OnInit {
   remove(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg.set('');
-        this.isRemoving = true;
         const ids = [...this.selectedArticles].map((a) => a.id);
         return this.articleService.remove2(ids);
       }),
       switchMap(() => this.articleService.load2()),
       map(() => {
         this.selectedArticles.clear();
-      }),
-      catchError((err) => {
-        console.log('err: ', err);
-        this.errorMsg.set('Cannot suppress');
-        return of(undefined);
-      }),
-      finalize(() => {
-        this.isRemoving = false;
-        this.cdr.markForCheck();
       }),
     );
   }
@@ -87,5 +66,18 @@ export class ListComponent implements OnInit {
       return;
     }
     this.selectedArticles.add(a);
+  }
+
+  setError(err: unknown) {
+    if (err === undefined) {
+      this.errorMsg.set('');
+      return;
+    }
+    if (err instanceof Error) {
+      this.errorMsg.set(err.message);
+      return;
+    }
+    console.log('err: ', err);
+    this.errorMsg.set('Technical Error');
   }
 }
