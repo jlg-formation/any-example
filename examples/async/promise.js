@@ -1,13 +1,9 @@
-import { readdir, readFile } from "fs";
-import { promisify } from "util";
+import { readdir, readFile } from "fs/promises";
 
-const readdirPromise = promisify(readdir);
-const readFilePromise = promisify(readFile);
-
-readdirPromise(".")
+readdir(".")
   .then((files) => {
     console.log("files: ", files);
-    return readFilePromise(files[0], "utf-8");
+    return readFile(files[0], "utf-8");
   })
   .then((content) => {
     console.log("content: ", content);
