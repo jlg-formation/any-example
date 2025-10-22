@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Article } from '../../interfaces/article';
 import { ArticleService } from '../../services/article.service';
-import { lastValueFrom } from 'rxjs';
+import { catchError, finalize, lastValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -33,41 +33,57 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.articleService.articles === undefined) {
-      (async () => {
-        await lastValueFrom(this.articleService.load2());
+      of(undefined)
+        .pipe(
+          switchMap(() => this.articleService.load2()),
+          finalize(() => {
+            this.cdr.markForCheck();
+          }),
+        )
+        .subscribe();
+    }
+  }
+
+  refresh(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRefreshing = true;
+        return this.articleService.load2();
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRefreshing = false;
         this.cdr.markForCheck();
-      })();
-    }
+      }),
+    );
   }
 
-  async refresh() {
-    try {
-      this.errorMsg = '';
-      this.isRefreshing = true;
-      await lastValueFrom(this.articleService.load2());
-    } catch (err) {
-      console.log('err: ', err);
-    } finally {
-      this.isRefreshing = false;
-      this.cdr.markForCheck();
-    }
-  }
-
-  async remove() {
-    try {
-      this.errorMsg = '';
-      this.isRemoving = true;
-      const ids = [...this.selectedArticles].map((a) => a.id);
-      await lastValueFrom(this.articleService.remove2(ids));
-      await lastValueFrom(this.articleService.load2());
-      this.selectedArticles.clear();
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Cannot suppress';
-    } finally {
-      this.isRemoving = false;
-      this.cdr.markForCheck();
-    }
+  remove(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        this.isRemoving = true;
+        const ids = [...this.selectedArticles].map((a) => a.id);
+        return this.articleService.remove2(ids);
+      }),
+      switchMap(() => this.articleService.load2()),
+      map(() => {
+        this.selectedArticles.clear();
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Cannot suppress';
+        return of(undefined);
+      }),
+      finalize(() => {
+        this.isRemoving = false;
+        this.cdr.markForCheck();
+      }),
+    );
   }
 
   select(a: Article) {

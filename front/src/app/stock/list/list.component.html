@@ -7,7 +7,7 @@
       }
     </div>
     <nav>
-      <button title="Rafraîchir" (click)="refresh()" [disabled]="isRefreshing">
+      <button title="Rafraîchir" (click)="refresh().subscribe()" [disabled]="isRefreshing">
         <fa-icon [icon]="faRotateRight" [animation]="isRefreshing ? 'spin' : undefined"></fa-icon>
       </button>
       <a routerLink="create" class="button" title="Ajouter">
@@ -16,7 +16,7 @@
       <button
         title="Supprimer"
         [hidden]="selectedArticles.size === 0"
-        (click)="remove()"
+        (click)="remove().subscribe()"
         [disabled]="isRemoving"
       >
         <fa-icon

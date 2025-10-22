@@ -4,7 +4,18 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { lastValueFrom, timer } from 'rxjs';
+import {
+  catchError,
+  delay,
+  finalize,
+  lastValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+  timer,
+} from 'rxjs';
 import { getErrorMsg } from '../../../utils/getErrorMsg';
 import { ArticleService } from '../../services/article.service';
 import { blackListValidator } from '../../validators/blacklist.validator';
@@ -35,20 +46,26 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async submit() {
-    try {
-      this.isAdding = true;
-      await lastValueFrom(timer(1000));
-      await lastValueFrom(this.articleService.add2(this.f.getRawValue()));
-      await lastValueFrom(this.articleService.load2());
-      await this.router.navigate(['..'], { relativeTo: this.route });
-    } catch (err) {
-      console.log('err: ', err);
-      if (err instanceof Error) {
-        this.errorMsg = err.message;
-      }
-    } finally {
-      this.isAdding = false;
-    }
+  submit(): Observable<void> {
+    return of(undefined).pipe(
+      tap(() => {
+        this.isAdding = true;
+      }),
+      delay(1000),
+      switchMap(() => this.articleService.add2(this.f.getRawValue())),
+      switchMap(() => this.articleService.load2()),
+      switchMap(() => this.router.navigate(['..'], { relativeTo: this.route })),
+      map(() => {}),
+      catchError((err) => {
+        console.log('err: ', err);
+        if (err instanceof Error) {
+          this.errorMsg = err.message;
+        }
+        throw new Error('Technical error');
+      }),
+      finalize(() => {
+        this.isAdding = false;
+      }),
+    );
   }
 }
