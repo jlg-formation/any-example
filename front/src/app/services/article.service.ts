@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, lastValueFrom, switchMap, timer } from 'rxjs';
+import { catchError, delay, lastValueFrom, map, Observable, of, switchMap, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Article, NewArticle } from '../interfaces/article';
 
@@ -15,45 +15,46 @@ export class ArticleService {
 
   constructor(private http: HttpClient) {}
 
-  async add(newArticle: NewArticle) {
-    await lastValueFrom(
-      this.http.post<void>(url, newArticle).pipe(
-        catchError((err) => {
-          console.log('err: ', err);
-          throw new Error('Technical error');
-        }),
-      ),
+  add2(newArticle: NewArticle): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => this.http.post<void>(url, newArticle)),
+      catchError((err) => {
+        console.log('err: ', err);
+        throw new Error('Technical error');
+      }),
     );
   }
 
-  async load() {
-    try {
-      this.errorMsg = '';
-      await this.http
-        .get<Article[]>(url)
-        .pipe(delay(1000))
-        .forEach((articles) => {
-          this.articles = articles;
-        });
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = 'Technical Error';
-    }
+  load2(): Observable<void> {
+    return of(undefined).pipe(
+      switchMap(() => {
+        this.errorMsg = '';
+        return this.http.get<Article[]>(url);
+      }),
+      delay(1000),
+      map((articles) => {
+        this.articles = articles;
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        this.errorMsg = 'Technical Error';
+        return of(undefined);
+      }),
+    );
   }
 
-  async remove(ids: string[]) {
-    await lastValueFrom(
-      timer(1000).pipe(
-        switchMap(() =>
-          this.http.delete<void>(url, {
-            body: ids,
-          }),
-        ),
-        catchError((err) => {
-          console.log('err: ', err);
-          throw new Error('Technical error');
+  remove2(ids: string[]): Observable<void> {
+    return of(undefined).pipe(
+      delay(1000),
+      switchMap(() =>
+        this.http.delete<void>(url, {
+          body: ids,
         }),
       ),
+      catchError((err) => {
+        console.log('err: ', err);
+        throw new Error('Technical error');
+      }),
     );
   }
 }
