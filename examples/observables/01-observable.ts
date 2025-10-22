@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 
-const obs = new Observable((subscriber) => {
+const obs = new Observable<unknown>((subscriber) => {
   subscriber.next(123);
   const timer = setTimeout(() => {
     subscriber.next(456);
@@ -17,7 +17,11 @@ const obs = new Observable((subscriber) => {
 
 const subscription = obs.subscribe({
   next: (data) => {
-    console.log("data: ", data);
+    if (typeof data !== "string") {
+      console.log("data: ", data);
+      return;
+    }
+    console.log("data: ", data.toLowerCase());
   },
   error: (err) => {
     console.log("err: ", err);
