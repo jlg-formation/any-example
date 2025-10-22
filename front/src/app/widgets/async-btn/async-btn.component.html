@@ -1,10 +1,10 @@
 <button
-  [class]="isPrimary ? 'primary' : ''"
+  [class]="isPrimary() ? 'primary' : ''"
   [disabled]="isRunning()"
   (click)="doAction().subscribe()"
 >
   <fa-icon
-    [icon]="isRunning() ? faCircleNotch : icon"
+    [icon]="isRunning() ? faCircleNotch : icon()"
     [animation]="isRunning() ? 'spin' : undefined"
   ></fa-icon>
 

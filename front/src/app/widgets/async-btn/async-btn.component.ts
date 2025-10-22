@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, input, Input, output, Output, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { catchError, finalize, Observable, of, switchMap } from 'rxjs';
@@ -10,17 +10,13 @@ import { catchError, finalize, Observable, of, switchMap } from 'rxjs';
   styleUrl: './async-btn.component.css',
 })
 export class AsyncBtnComponent {
-  @Input()
-  isPrimary = false;
+  isPrimary = input(false);
 
-  @Input()
-  action: Observable<void> = of(undefined);
+  action = input<Observable<void>>(of(undefined));
 
-  @Input()
-  icon = faCircleNotch;
+  icon = input(faCircleNotch);
 
-  @Output()
-  setError = new EventEmitter<unknown>();
+  setError = output<unknown>();
 
   faCircleNotch = faCircleNotch;
 
@@ -32,7 +28,7 @@ export class AsyncBtnComponent {
       switchMap(() => {
         this.isRunning.set(true);
         this.setError.emit(undefined);
-        return this.action;
+        return this.action();
       }),
       catchError((err) => {
         this.setError.emit(err);
