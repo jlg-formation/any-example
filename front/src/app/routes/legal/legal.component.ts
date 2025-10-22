@@ -1,13 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import { interval, Subscription, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-legal',
   templateUrl: './legal.component.html',
   styleUrls: ['./legal.component.scss'],
-  standalone: true,
+  imports: [DatePipe],
 })
-export class LegalComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export class LegalComponent {
+  dateTime = signal(new Date());
+  origin = this.dateTime();
+  seconds = computed(() => {
+    return ((this.dateTime().getTime() - this.origin.getTime()) / 1000).toFixed(0);
+  });
+  subscr: Subscription;
+  constructor() {
+    this.subscr = interval(1000)
+      .pipe(
+        tap(() => {
+          this.dateTime.set(new Date());
+          console.log('date = ' + this.dateTime());
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+  }
 }

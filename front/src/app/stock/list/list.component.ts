@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -26,20 +26,15 @@ export class ListComponent implements OnInit {
   isRefreshing = false;
   selectedArticles = new Set<Article>();
   isRemoving = false;
-  errorMsg = '';
+  errorMsg = signal('');
 
   cdr = inject(ChangeDetectorRef);
   articleService = inject(ArticleService);
 
   ngOnInit(): void {
-    if (this.articleService.articles === undefined) {
+    if (this.articleService.articles() === undefined) {
       of(undefined)
-        .pipe(
-          switchMap(() => this.articleService.load2()),
-          finalize(() => {
-            this.cdr.markForCheck();
-          }),
-        )
+        .pipe(switchMap(() => this.articleService.load2()))
         .subscribe();
     }
   }
@@ -47,7 +42,7 @@ export class ListComponent implements OnInit {
   refresh(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
+        this.errorMsg.set('');
         this.isRefreshing = true;
         return this.articleService.load2();
       }),
@@ -65,7 +60,7 @@ export class ListComponent implements OnInit {
   remove(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
+        this.errorMsg.set('');
         this.isRemoving = true;
         const ids = [...this.selectedArticles].map((a) => a.id);
         return this.articleService.remove2(ids);
@@ -76,7 +71,7 @@ export class ListComponent implements OnInit {
       }),
       catchError((err) => {
         console.log('err: ', err);
-        this.errorMsg = 'Cannot suppress';
+        this.errorMsg.set('Cannot suppress');
         return of(undefined);
       }),
       finalize(() => {

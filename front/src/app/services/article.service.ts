@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, delay, lastValueFrom, map, Observable, of, switchMap, timer } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { BehaviorSubject, catchError, delay, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Article, NewArticle } from '../interfaces/article';
 
@@ -10,8 +10,8 @@ const url = environment.apiDomain + '/api/articles';
   providedIn: 'root',
 })
 export class ArticleService {
-  articles: Article[] | undefined;
-  errorMsg = '';
+  articles = signal<Article[] | undefined>(undefined);
+  errorMsg$ = new BehaviorSubject('');
 
   constructor(private http: HttpClient) {}
 
@@ -28,16 +28,16 @@ export class ArticleService {
   load2(): Observable<void> {
     return of(undefined).pipe(
       switchMap(() => {
-        this.errorMsg = '';
+        this.errorMsg$.next('');
         return this.http.get<Article[]>(url);
       }),
       delay(1000),
       map((articles) => {
-        this.articles = articles;
+        this.articles.set(articles);
       }),
       catchError((err) => {
         console.log('err: ', err);
-        this.errorMsg = 'Technical Error';
+        this.errorMsg$.next('Technical Error');
         return of(undefined);
       }),
     );
